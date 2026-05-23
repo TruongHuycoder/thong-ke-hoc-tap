@@ -1,0 +1,20 @@
+# Biuld files / Binaries
+*.exe
+*.dll
+*.so
+
+# Environment variables
+.env
+.env.*
+
+# User Data
+data_users/
+*.bak
+
+# Editor/System
+.vscode/
+.idea/
+.DS_Store
+
+# Misc
+argv.json

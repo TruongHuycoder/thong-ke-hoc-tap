@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#14b8a6">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <title>Freshman Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- 1. Sidebar Navigation -->
+        <aside id="main-sidebar" class="w-64 bg-white border-r border-gray-100 flex flex-col p-6 shrink-0 h-full z-20 hidden">
+            <!-- Logo area -->
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-teal-400 shadow-sm"></div>
+                <span class="font-bold text-gray-800 text-lg tracking-tight">Freshman Analytics</span>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="flex flex-col gap-2">
+                <a href="#" data-target="dashboard-view" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors">
+                    <i class="fas fa-home w-5"></i> <span data-i18n="nav_dashboard">Dashboard</span>
+                </a>
+                <a href="#" data-target="courses-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer">
+                    <i class="fas fa-book-open w-5"></i> <span data-i18n="nav_courses">Courses</span>
+                </a>
+                <a href="#" data-target="schedule-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer">
+                    <i class="fas fa-calendar-alt w-5"></i> <span data-i18n="nav_schedule">Schedule</span>
+                </a>
+                <a href="#" data-target="analytics-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer">
+                    <i class="fas fa-chart-line w-5"></i> <span data-i18n="nav_analytics">Analytics</span>
+                </a>
+                <a href="#" data-target="settings-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer">
+                    <i class="fas fa-cog w-5"></i> <span data-i18n="nav_settings">Settings</span>
+                </a>
+                <a href="#" id="logout-btn" class="flex items-center gap-3 px-4 py-3 mt-4 rounded-xl text-red-500 hover:bg-red-50 font-medium transition-colors cursor-pointer">
+                    <i class="fas fa-sign-out-alt w-5"></i> <span data-i18n="logout">Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 3. Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-8 h-full relative">
+            <!-- 2. Top Header -->
+            <header id="main-header" class="flex justify-between items-center mb-8 hidden">
+                <div>
+                    <h1 id="greeting-text" class="text-3xl font-bold text-gray-900">Good morning, Nam! 👋</h1>
+                    <p class="text-gray-500 mt-1">Today is a great day to learn something new.</p>
+                </div>
+                <div class="flex items-center gap-6">
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <div id="notification-bell" class="relative cursor-pointer hover:scale-105 transition-transform">
+                            <i class="fas fa-bell text-gray-400 text-xl"></i>
+                            <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                        </div>
+                        <!-- Notification Dropdown -->
+                        <div id="notification-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white border border-gray-100 rounded-2xl shadow-lg z-50 p-4">
+                            <h3 class="font-bold text-gray-800 mb-2 border-b pb-2" data-i18n="notifications">Notifications</h3>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1"><span class="font-bold text-teal-500" data-i18n="system">System</span> • <span data-i18n="just_now">Just now</span></p>
+                                <p data-i18n="notification_welcome">Welcome to Freshman Analytics! We're excited to have you here. This platform is designed to help you analyze your study statistics and optimize your learning journey. Start maximizing your efficiency today!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="add-material-btn" class="bg-teal-400 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm hover:shadow-md hover:scale-105 transition-all cursor-pointer" data-i18n="add_material">
+                        + Add Material
+                    </button>
+                    <div id="profile-avatar-btn" class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border-2 border-white shadow-sm cursor-pointer hover:scale-105 transition-transform">
+                        <img id="avatar-img" src="" alt="Avatar" class="w-full h-full rounded-full hidden object-cover">
+                        <span id="avatar-initials">NA</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div id="views-container">
+                <!-- Login View -->
+                <div id="login-view" class="view-section">
+                    <div class="max-w-md mx-auto mt-20 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 bg-teal-100 text-teal-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold text-gray-800">Welcome Back!</h2>
+                            <p class="text-gray-500 mt-2">Log in to sync your study progress</p>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                <input type="text" id="login-username" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-teal-400 focus:outline-none transition-colors" placeholder="Enter username">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                <input type="password" id="login-password" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-teal-400 focus:outline-none transition-colors" placeholder="Enter password">
+                            </div>
+                            <button id="login-submit-btn" class="w-full bg-teal-500 text-white font-bold py-3 rounded-xl mt-4 hover:bg-teal-600 transition-colors shadow-sm">Log In</button>
+                            <p class="text-center text-sm text-gray-500 mt-4">Don't have an account? <span id="go-to-register" class="text-teal-500 font-bold cursor-pointer hover:underline">Sign up</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register View -->
+                <div id="register-view" class="view-section hidden">
+                    <div class="max-w-md mx-auto mt-20 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 bg-blue-100 text-blue-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold text-gray-800">Create Account</h2>
+                            <p class="text-gray-500 mt-2">Start your learning journey today</p>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                <input type="text" id="register-username" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-blue-400 focus:outline-none transition-colors" placeholder="Choose a username">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                <input type="password" id="register-password" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-blue-400 focus:outline-none transition-colors" placeholder="Create a password">
+                            </div>
+                            <button id="register-submit-btn" class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl mt-4 hover:bg-blue-600 transition-colors shadow-sm">Sign Up</button>
+                            <p class="text-center text-sm text-gray-500 mt-4">Already have an account? <span id="go-to-login" class="text-blue-500 font-bold cursor-pointer hover:underline">Log in</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard View -->
+                <div id="dashboard-view" class="view-section hidden">
+                    <!-- Row 1: Quick Stats (3 Cards) -->
+            <div class="grid grid-cols-3 gap-6 mb-6">
+                <!-- Card 1: Completion Rate -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition-shadow">
+                    <div class="relative w-20 h-20 mb-3">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#f3f4f6" stroke-width="8" />
+                            <circle id="stat-completion-circle" cx="50" cy="50" r="40" fill="none" stroke="#2dd4bf" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="62.8" stroke-linecap="round" class="transition-all duration-1000" />
+                        </svg>
+                        <div id="stat-completion-text" class="absolute inset-0 flex items-center justify-center font-bold text-xl text-gray-800">75%</div>
+                    </div>
+                    <h3 class="text-gray-500 font-medium" data-i18n="completion_rate">Completion Rate</h3>
+                </div>
+                <!-- Card 2: On-Time Rate -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition-shadow">
+                    <div class="relative w-20 h-20 mb-3">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#f3f4f6" stroke-width="8" />
+                            <circle id="stat-ontime-circle" cx="50" cy="50" r="40" fill="none" stroke="#60a5fa" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="25.12" stroke-linecap="round" class="transition-all duration-1000" />
+                        </svg>
+                        <div id="stat-ontime-text" class="absolute inset-0 flex items-center justify-center font-bold text-xl text-gray-800">90%</div>
+                    </div>
+                    <h3 class="text-gray-500 font-medium" data-i18n="ontime_rate">On-Time Rate</h3>
+                </div>
+                <!-- Card 3: Avg. Completion Time -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition-shadow">
+                    <div class="w-20 h-20 flex items-center justify-center mb-3 text-teal-400">
+                        <i class="far fa-clock text-5xl"></i>
+                    </div>
+                    <div id="stat-time-text" class="font-bold text-3xl text-gray-800 mb-1">1.5 hrs</div>
+                    <h3 class="text-gray-500 font-medium" data-i18n="avg_time">Avg. Completion Time</h3>
+                </div>
+            </div>
+
+            <!-- Row 2: Action & Diagnosis (Full-width Micro-Tasks) -->
+            <div class="mb-6">
+                <!-- Left Card - Today's Micro-Tasks -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-bold text-gray-800">Today's Micro-Tasks</h2>
+                        <span class="text-sm font-medium text-gray-400">Goal: Macroeconomics</span>
+                    </div>
+                    <div id="micro-tasks-container" class="flex flex-col gap-3">
+                        <div class="task-item flex items-center p-4 rounded-xl border border-gray-100 bg-gray-50 opacity-75 cursor-pointer transition-colors">
+                            <div class="task-checkbox checked w-6 h-6 rounded-md bg-teal-400 text-white flex items-center justify-center mr-4 shrink-0 transition-all">
+                                <i class="fas fa-check text-xs"></i>
+                            </div>
+                            <div class="task-text flex-grow text-gray-400 line-through font-medium">Memorize 5 key definitions</div>
+                        </div>
+                        <div class="task-item flex items-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors shadow-sm">
+                            <div class="task-checkbox w-6 h-6 rounded-md border-2 border-gray-300 mr-4 shrink-0 transition-all"></div>
+                            <div class="task-text flex-grow text-gray-800 font-medium">Complete 1 past exam paper under timed conditions</div>
+                            <span class="bg-red-50 text-red-500 px-2.5 py-1 rounded-md text-xs font-bold tracking-wide ml-3 shrink-0">PRIORITY</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Path Optimization (1 Wide Card) -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
+                <h2 class="text-lg font-bold text-gray-800 mb-6">Optimal Learning Path</h2>
+                
+                <div class="w-full h-[220px] text-teal-400 relative">
+                    <svg viewBox="0 0 800 220" class="w-full h-full" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="optGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="currentColor" stop-opacity="0.25"/>
+                                <stop offset="100%" stop-color="currentColor" stop-opacity="0.05"/>
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Area path representing the Optimal Zone -->
+                        <path d="M0,220 L0,180 Q400,120 800,40 L800,220 Z" fill="url(#optGrad)" />
+                        <!-- Top edge of the Optimal Zone -->
+                        <path d="M0,180 Q400,120 800,40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                        <!-- Bottom edge representing bottom of optimal zone -->
+                        <path d="M0,220 Q400,160 800,80" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6 6" stroke-opacity="0.5"/>
+                        
+                        <!-- Axis Labels -->
+                        <text x="10" y="20" class="text-xs fill-gray-400 font-medium">Difficulty</text>
+                        <text x="720" y="210" class="text-xs fill-gray-400 font-medium">Student Skill</text>
+                        
+                        <!-- Label inside chart -->
+                        <text x="400" y="145" text-anchor="middle" class="text-xs font-bold fill-teal-500 tracking-wider" transform="rotate(-10, 400, 145)">OPTIMAL ZONE</text>
+                    </svg>
+                </div>
+                
+                <!-- Legend -->
+                <div class="flex justify-center gap-6 mt-6">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-sm bg-yellow-400"></div>
+                        <span class="text-sm text-gray-600 font-medium">Stress</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-sm bg-teal-400"></div>
+                        <span class="text-sm text-gray-600 font-medium">Optimal</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-sm bg-gray-300"></div>
+                        <span class="text-sm text-gray-600 font-medium">Boredom</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dashboard View Ends -->
+            </div>
+            
+            <!-- Add Material View -->
+            <div id="add-material-view" class="view-section hidden">
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center min-h-[300px] border-dashed border-2 border-teal-200 hover:bg-teal-50 transition-colors cursor-pointer" id="drop-zone">
+                    <i class="fas fa-cloud-upload-alt text-5xl text-teal-400 mb-4"></i>
+                    <h2 class="text-xl font-bold text-gray-800 mb-2" data-i18n="upload_title">Upload Materials</h2>
+                    <p class="text-gray-500 text-center max-w-md" data-i18n="upload_desc">Drag and drop your documents, PDFs, or files here, or click to browse. We'll automatically create compatible lessons.</p>
+                    <input type="file" id="file-upload" class="hidden" accept=".pdf,.doc,.docx,.txt">
+                    <div id="upload-progress" class="w-full max-w-md mt-6 hidden">
+                        <div class="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div id="upload-bar" class="h-full bg-teal-400 w-0 transition-all duration-300"></div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2 text-center" data-i18n="processing">Processing and creating lessons...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses View -->
+            <div id="courses-view" class="view-section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6" data-i18n="my_courses">My Courses</h2>
+                <div id="courses-grid" class="grid grid-cols-3 gap-6">
+                    <!-- Default course card -->
+                    <div class="course-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-transform hover:scale-105 cursor-pointer">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-book"></i></div>
+                        <h3 class="font-bold text-gray-800 mb-2" data-i18n="course_macro">Macroeconomics 101</h3>
+                        <p class="text-sm text-gray-500 mb-4" data-i18n="course_macro_desc">Dr. Smith • 12 Lessons</p>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5"><div class="bg-blue-500 h-1.5 rounded-full" style="width: 45%"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Detail View -->
+            <div id="course-detail-view" class="view-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <button id="back-to-courses-from-detail" class="text-gray-500 hover:text-gray-800 transition-colors flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i> Back to Courses
+                    </button>
+                    <h2 id="detail-course-title" class="text-xl font-bold text-gray-800">Course Details</h2>
+                    <button id="detail-delete-course-btn" class="bg-red-50 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors border border-red-100 flex items-center gap-2">
+                        <i class="fas fa-trash-alt"></i> Xóa khóa học
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6">
+                    <!-- Left: Generation & Start -->
+                    <div class="col-span-2 flex flex-col gap-6">
+                        <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">Ready to practice?</h3>
+                            <button id="detail-start-quiz-btn" class="bg-gradient-to-r from-blue-400 to-teal-400 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg hover:scale-105 transition-all text-lg w-full max-w-sm mb-6">
+                                Luyện tập nhanh (3 câu)
+                            </button>
+                            <div class="w-full h-px bg-gray-100 mb-6"></div>
+                            <h4 class="text-md font-bold text-gray-600 mb-2">Tạo số lượng câu hỏi mong muốn</h4>
+                            <p class="text-sm text-gray-500 text-center mb-4">Nhập số lượng câu hỏi và hệ thống AI sẽ tạo đề thi rồi bắt đầu bài học ngay lập tức.</p>
+                            <div class="flex gap-4 items-center w-full max-w-sm">
+                                <input type="number" id="detail-num-questions" min="1" max="100" value="5" class="p-3 border-2 border-gray-200 rounded-xl focus:border-teal-500 focus:outline-none text-lg w-24 text-center">
+                                <button id="detail-generate-btn" class="flex-1 bg-teal-500 text-white px-4 py-3 rounded-xl font-bold shadow-sm hover:shadow-md transition-colors cursor-pointer">
+                                    Tạo & Bắt đầu
+                                </button>
+                            </div>
+                            <div id="detail-generating-indicator" class="hidden mt-4 text-teal-600 font-medium animate-pulse flex items-center gap-2">
+                                <i class="fas fa-spinner fa-spin"></i> Generating... this may take a while.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: History -->
+                    <div class="col-span-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 h-[400px] flex flex-col">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fas fa-history text-teal-500 mr-2"></i> Quiz History</h3>
+                        <div id="detail-history-list" class="flex-1 overflow-y-auto flex flex-col gap-3">
+                            <!-- History items go here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise View -->
+            <div id="exercise-view" class="view-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <button id="back-to-courses" class="text-gray-500 hover:text-gray-800 transition-colors flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i> Back to Courses
+                    </button>
+                    <h2 id="exercise-title" class="text-xl font-bold text-gray-800">AI Generated Exercises</h2>
+                    <div class="w-24"></div> <!-- Spacer for center alignment -->
+                </div>
+
+                <!-- Loading State -->
+                <div id="exercise-loading" class="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 flex flex-col items-center justify-center min-h-[400px]">
+                    <i class="fas fa-robot text-5xl text-blue-500 mb-6 animate-bounce"></i>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Analyzing Document...</h3>
+                    <p class="text-gray-500 text-center max-w-md">Our AI is reading your material and generating custom questions to test your knowledge.</p>
+                    <div class="w-48 bg-gray-200 rounded-full h-2 mt-6 overflow-hidden">
+                        <div class="bg-blue-500 h-2 rounded-full w-full animate-pulse"></div>
+                    </div>
+                </div>
+
+                <!-- Quiz Interface -->
+                <div id="exercise-quiz" class="hidden bg-white rounded-2xl p-8 shadow-sm border border-gray-100 min-h-[400px] flex flex-col">
+                    <div class="flex justify-between items-center mb-8">
+                        <span class="text-sm font-bold text-teal-500 uppercase tracking-wider" id="quiz-progress-text">Question 1 of 3</span>
+                        <div class="flex gap-2" id="quiz-progress-dots">
+                            <!-- dots generated dynamically -->
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-gray-800 mb-8" id="quiz-question">Loading question...</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8" id="quiz-options">
+                        <!-- options generated dynamically -->
+                    </div>
+
+                    <div class="mt-auto flex justify-end">
+                        <button id="quiz-action-btn" class="bg-gray-200 text-gray-400 px-8 py-3 rounded-xl font-bold cursor-not-allowed transition-colors" disabled>
+                            Submit Answer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Results -->
+                <div id="exercise-results" class="hidden bg-white rounded-2xl p-12 shadow-sm border border-gray-100 flex flex-col items-center justify-center min-h-[400px]">
+                    <div class="w-24 h-24 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-6 text-4xl">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-800 mb-2">Quiz Complete!</h3>
+                    <p class="text-gray-500 mb-8 text-center" id="quiz-score-text">You got 3 out of 3 correct.</p>
+                    
+                    <button id="finish-quiz-btn" class="bg-gradient-to-r from-blue-400 to-teal-400 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg hover:scale-105 transition-all">
+                        Update Dashboard & Return
+                    </button>
+                </div>
+            </div>
+
+            <!-- Schedule View -->
+            <div id="schedule-view" class="view-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800" data-i18n="my_schedule">Lịch trình học (May 2026)</h2>
+                    <div class="flex gap-2">
+                        <button class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-600 transition-colors"><i class="fas fa-chevron-left"></i></button>
+                        <button class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-600 transition-colors"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Date Selector -->
+                <div id="schedule-date-selector" class="flex gap-4 mb-8 overflow-x-auto pb-2 hide-scrollbar">
+                    <!-- Dates will be generated dynamically -->
+                </div>
+
+                <!-- Timeline -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 relative">
+                    <!-- Vertical Line -->
+                    <div class="absolute left-10 top-8 bottom-8 w-px bg-gray-200"></div>
+                    
+                    <div id="schedule-timeline" class="flex flex-col gap-6">
+                        <!-- Timeline items will be generated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics View -->
+            <div id="analytics-view" class="view-section hidden">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800" data-i18n="detailed_analytics">Phân tích quá trình học</h2>
+                        <p class="text-gray-500 mt-1">Khám phá điểm mạnh và những phần cần cải thiện</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+                    <!-- Mistakes / Need Improvement -->
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-500 flex items-center justify-center text-2xl shadow-sm border border-orange-200">
+                                <i class="fas fa-chart-line transform -scale-x-100"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-800">Điểm sai cần khắc phục</h3>
+                                <p class="text-sm text-gray-500">Luyện tập lại để tăng sự ghi nhớ</p>
+                            </div>
+                        </div>
+                        
+                        <div id="analytics-mistakes-list" class="flex flex-col gap-4 flex-1 overflow-y-auto max-h-[300px] hide-scrollbar pr-2">
+                            <!-- Mistakes will be generated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Strengths -->
+                    <div class="bg-gradient-to-br from-teal-500 to-blue-600 rounded-3xl p-6 shadow-md text-white flex flex-col relative overflow-hidden hover:shadow-lg transition-shadow border border-teal-400">
+                        <!-- Decorative bg -->
+                        <i class="fas fa-award absolute -right-6 -bottom-6 text-[140px] text-white opacity-10"></i>
+                        
+                        <div class="flex items-center gap-3 mb-6 relative z-10">
+                            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl shadow-inner border border-white/30 backdrop-blur-md">
+                                <i class="fas fa-star text-yellow-300"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold">Thành tích tốt đáng tự hào</h3>
+                                <p class="text-sm text-teal-100">Phát huy thế mạnh của bạn</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white/10 rounded-2xl p-1 backdrop-blur-md flex-1 relative z-10 border border-white/20 shadow-inner">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr>
+                                        <th class="p-4 text-sm font-bold text-teal-50 border-b border-white/20 uppercase tracking-wider">Khóa học & Kỹ năng</th>
+                                        <th class="p-4 text-sm font-bold text-teal-50 border-b border-white/20 text-center uppercase tracking-wider">Độ chính xác</th>
+                                        <th class="p-4 text-sm font-bold text-teal-50 border-b border-white/20 text-right uppercase tracking-wider">Đánh giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="hover:bg-white/10 transition-colors group">
+                                        <td class="p-4 border-b border-white/10">
+                                            <p class="font-bold text-lg mb-0.5 group-hover:text-yellow-200 transition-colors">Cung và Cầu</p>
+                                            <p class="text-xs text-teal-100 font-medium">Macroeconomics 101</p>
+                                        </td>
+                                        <td class="p-4 border-b border-white/10 text-center font-bold text-lg">95%</td>
+                                        <td class="p-4 border-b border-white/10 text-right">
+                                            <span class="bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">Xuất sắc</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-white/10 transition-colors group">
+                                        <td class="p-4 border-b border-white/10">
+                                            <p class="font-bold text-lg mb-0.5 group-hover:text-yellow-200 transition-colors">Động từ hành động</p>
+                                            <p class="text-xs text-teal-100 font-medium">3000 Từ Vựng</p>
+                                        </td>
+                                        <td class="p-4 border-b border-white/10 text-center font-bold text-lg">100%</td>
+                                        <td class="p-4 border-b border-white/10 text-right">
+                                            <span class="bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">Hoàn hảo</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-white/10 transition-colors group">
+                                        <td class="p-4">
+                                            <p class="font-bold text-lg mb-0.5 group-hover:text-green-200 transition-colors">Giới hạn hàm số</p>
+                                            <p class="text-xs text-teal-100 font-medium">Toán Cao Cấp</p>
+                                        </td>
+                                        <td class="p-4 text-center font-bold text-lg">88%</td>
+                                        <td class="p-4 text-right">
+                                            <span class="bg-gradient-to-r from-green-300 to-emerald-400 text-green-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">Rất tốt</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settings-view" class="view-section hidden">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 max-w-2xl">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6" data-i18n="account_settings">Account Settings</h2>
+                    
+                    <!-- Avatar Upload -->
+                    <div class="mb-8 flex items-center gap-6">
+                        <div class="relative w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border-4 border-white shadow-md group">
+                            <img id="settings-avatar-img" src="" alt="Avatar" class="w-full h-full rounded-full hidden object-cover">
+                            <span id="settings-avatar-initials" class="text-2xl">NA</span>
+                            <div class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" id="avatar-upload-trigger">
+                                <i class="fas fa-camera text-white text-xl"></i>
+                            </div>
+                            <input type="file" id="avatar-input" class="hidden" accept="image/*">
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800" data-i18n="profile_picture">Profile Picture</h3>
+                            <p class="text-sm text-gray-500" data-i18n="profile_picture_desc">Click the camera icon to upload a new avatar.</p>
+                        </div>
+                    </div>
+
+                    <!-- Language Selection -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="language_pref">Language Preference</label>
+                        <select id="language-select" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400">
+                            <option value="en">English</option>
+                            <option value="vi">Tiếng Việt (Vietnamese)</option>
+                            <option value="fr">Français (French)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Bottom padding for floating widget -->
+            <div class="h-10"></div>
+        </main>
+    </div>
+
+    <!-- 4. Floating Action Element (Chat Widget) -->
+    <div class="fixed bottom-6 right-6 w-[320px] bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-gray-100 flex flex-col overflow-hidden z-50 transition-all">
+        <!-- Chat Header -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-400 p-4 flex items-center justify-between text-white cursor-pointer hover:from-blue-600 hover:to-blue-500 transition-colors">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                    <i class="fas fa-robot text-sm"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm">Intelligent Partner 24/7</h4>
+                    <p class="text-[10px] text-blue-100">Online</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-down text-blue-100 hover:text-white"></i>
+        </div>
+        
+        <!-- Chat Body -->
+        <div id="chat-body" class="p-4 bg-gray-50 h-64 overflow-y-auto flex flex-col gap-3">
+            <div class="bg-white border border-gray-100 rounded-2xl rounded-tl-sm p-3 shadow-sm text-sm text-gray-700 w-11/12 self-start leading-relaxed">
+                Hi Nam! I analyzed your new materials. Ready to tackle Elasticity?
+            </div>
+        </div>
+        
+        <!-- Chat Input -->
+        <div class="p-3 border-t border-gray-100 bg-white flex items-center gap-2">
+            <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all">
+            <button id="send-btn" class="w-9 h-9 rounded-xl bg-blue-500 text-white flex items-center justify-center hover:bg-blue-600 shadow-sm transition-colors shrink-0">
+                <i class="fas fa-paper-plane text-xs relative -ml-0.5 mt-0.5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Interactive Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let courseData = {};
+            let dashboardState = { totalCourses: 1, completedQuizzes: 0, totalScore: 0, totalQuestions: 0, radarStats: [0.8, 0.7, 0.9, 0.4, 0.85] };
+            let currentDetailCourse = "";
+            let currentQuizCourse = "";
+            let currentUser = null;
+
+            // --- AUTH LOGIC ---
+            const token = localStorage.getItem('token');
+            const username = localStorage.getItem('username');
+            
+            function showLogin() {
+                document.getElementById('main-sidebar').classList.add('hidden');
+                document.getElementById('main-header').classList.add('hidden');
+                document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
+                document.getElementById('login-view').classList.remove('hidden');
+            }
+            
+            async function loadDataAndStart() {
+                try {
+                    const res = await fetch('/api/data', {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    });
+                    if (!res.ok) throw new Error("Invalid token");
+                    const data = await res.json();
+                    
+                    if (data.courseData) courseData = data.courseData;
+                    if (data.dashboardState) dashboardState = data.dashboardState;
+                    
+                    if (typeof renderCoursesGrid === 'function') {
+                        renderCoursesGrid();
+                    }
+                    if (typeof renderDashboardStats === 'function') {
+                        renderDashboardStats();
+                    }
+                    if (typeof renderScheduleDateSelector === 'function') {
+                        renderScheduleDateSelector();
+                    }
+                    if (typeof renderAnalyticsMistakes === 'function') {
+                        renderAnalyticsMistakes();
+                    }
+                    
+                    document.getElementById('main-sidebar').classList.remove('hidden');
+                    document.getElementById('main-header').classList.remove('hidden');
+                    switchToView('dashboard-view');
+                    showToast(`Welcome back, ${localStorage.getItem('username')}!`);
+                    const greetingTextElement = document.getElementById('greeting-text');
+                    if (greetingTextElement) {
+                        greetingTextElement.innerHTML = `Welcome back, ${localStorage.getItem('username')}! 👋`;
+                    }
+                } catch(e) {
+                    showLogin();
+                }
+            }
+
+            function renderCoursesGrid() {
+                const coursesGrid = document.getElementById('courses-grid');
+                if (!coursesGrid) return;
+                
+                coursesGrid.innerHTML = '';
+                
+                // Add default course if it's not in courseData to avoid duplication
+                if (!courseData["Macroeconomics 101"] && !courseData["Kinh tế vĩ mô 101"]) {
+                    const defaultCard = document.createElement('div');
+                    defaultCard.className = 'course-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-transform hover:scale-105 cursor-pointer';
+                    defaultCard.innerHTML = `
+                        <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-book"></i></div>
+                        <h3 class="font-bold text-gray-800 mb-2" data-i18n="course_macro">Macroeconomics 101</h3>
+                        <p class="text-sm text-gray-500 mb-4" data-i18n="course_macro_desc">Dr. Smith • 12 Lessons</p>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5"><div class="bg-blue-500 h-1.5 rounded-full" style="width: 45%"></div></div>
+                    `;
+                    defaultCard.addEventListener('click', () => {
+                        const title = defaultCard.querySelector('h3').textContent;
+                        if(typeof window.openCourseDetail === 'function') window.openCourseDetail(title);
+                    });
+                    coursesGrid.appendChild(defaultCard);
+                }
+
+                for (const [fileName, course] of Object.entries(courseData)) {
+                    const newCard = document.createElement('div');
+                    newCard.className = 'course-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-transform hover:scale-105 cursor-pointer border-t-4 border-t-teal-400 relative group';
+                    newCard.innerHTML = `
+                        <button class="absolute top-4 right-4 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg hover:bg-red-50" title="Delete course" onclick="event.stopPropagation(); window.deleteCourse('${fileName}');">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <div class="w-12 h-12 bg-teal-100 text-teal-500 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-file-alt"></i></div>
+                        <h3 class="font-bold text-gray-800 mb-2">${fileName}</h3>
+                        <p class="text-sm text-gray-500 mb-4">Saved • AI Generated</p>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5"><div class="bg-teal-500 h-1.5 rounded-full" style="width: 100%"></div></div>
+                    `;
+                    newCard.addEventListener('click', () => {
+                        if(typeof window.openCourseDetail === 'function') window.openCourseDetail(fileName);
+                    });
+                    coursesGrid.prepend(newCard);
+                }
+            }
+
+            window.deleteCourse = function(fileName) {
+                if (confirm(`Bạn có chắc chắn muốn xóa khóa học "${fileName}" không?`)) {
+                    delete courseData[fileName];
+                    window.saveData();
+                    renderCoursesGrid();
+                    if (typeof renderScheduleDateSelector === 'function') {
+                        renderScheduleDateSelector();
+                    }
+                    showToast(`Đã xóa khóa học "${fileName}"`);
+                }
+            }
+
+            function renderDashboardStats() {
+                if (!dashboardState) return;
+
+                // 1. Completion Rate
+                const completionCircle = document.getElementById('stat-completion-circle');
+                const completionText = document.getElementById('stat-completion-text');
+                if (completionCircle && completionText) {
+                    let baseRate = 50 + ((dashboardState.completedQuizzes || 0) * 10);
+                    let newPercent = Math.min(100, baseRate);
+                    
+                    let newOffset = 251.2 - ((251.2 * newPercent) / 100);
+                    completionCircle.style.strokeDashoffset = newOffset;
+                    completionText.textContent = `${newPercent}%`;
+                }
+
+                // 2. On-Time Rate
+                const ontimeCircle = document.getElementById('stat-ontime-circle');
+                const ontimeText = document.getElementById('stat-ontime-text');
+                if (ontimeCircle && ontimeText) {
+                    let scoreRatio = (dashboardState.totalQuestions > 0) ? (dashboardState.totalScore / dashboardState.totalQuestions) : 0;
+                    let newPercent = dashboardState.completedQuizzes > 0 ? Math.floor(70 + (scoreRatio * 30)) : 90;
+                    let newOffset = 251.2 - ((251.2 * newPercent) / 100);
+                    ontimeCircle.style.strokeDashoffset = newOffset;
+                    ontimeText.textContent = `${newPercent}%`;
+                }
+
+                // 3. Avg. Completion Time
+                const timeText = document.getElementById('stat-time-text');
+                if (timeText) {
+                    let newTime = Math.max(0.5, 1.5 - ((dashboardState.completedQuizzes || 0) * 0.1)).toFixed(1);
+                    timeText.textContent = `${newTime} hrs`;
+                }
+            }
+
+            let currentScheduleDate = new Date();
+
+            function renderScheduleDateSelector() {
+                const container = document.getElementById('schedule-date-selector');
+                if (!container) return;
+                container.innerHTML = '';
+                
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                
+                for(let i = -3; i <= 3; i++) {
+                    const d = new Date();
+                    d.setDate(currentScheduleDate.getDate() + i);
+                    
+                    const isSelected = i === 0;
+                    const dateNum = d.getDate();
+                    const dayName = dayNames[d.getDay()];
+                    
+                    const el = document.createElement('div');
+                    if (isSelected) {
+                        el.className = 'flex flex-col items-center justify-center min-w-[70px] h-20 rounded-2xl bg-gradient-to-b from-teal-400 to-teal-500 text-white cursor-pointer shadow-md transform scale-105 transition-transform flex-shrink-0';
+                    } else {
+                        el.className = 'flex flex-col items-center justify-center min-w-[70px] h-20 rounded-2xl border border-gray-100 bg-white text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm flex-shrink-0';
+                    }
+                    
+                    el.innerHTML = `
+                        <span class="text-xs font-bold uppercase mb-1">${dayName}</span>
+                        <span class="text-xl font-bold ${isSelected ? '' : 'text-gray-800'}">${dateNum}</span>
+                    `;
+                    
+                    el.onclick = () => {
+                        currentScheduleDate = d;
+                        renderScheduleDateSelector();
+                    };
+                    
+                    container.appendChild(el);
+                }
+                
+                renderScheduleTimeline();
+            }
+
+            function renderScheduleTimeline() {
+                const timeline = document.getElementById('schedule-timeline');
+                if (!timeline) return;
+                
+                const allCourses = Object.keys(courseData);
+                if (allCourses.length === 0) {
+                    timeline.innerHTML = '<div class="text-center text-gray-500 italic py-8">No courses available. Please add material first.</div>';
+                    return;
+                }
+                
+                const daySeed = currentScheduleDate.getDate() + currentScheduleDate.getMonth();
+                const shuffled = [...allCourses].sort((a, b) => (a.length + daySeed) % 3 - (b.length + daySeed) % 3);
+                
+                const slots = [
+                    { time: '08:00', period: 'AM', label: 'Sự tập trung cao', type: 'advanced', dotClass: 'bg-teal-400', cardClass: 'from-teal-50 to-emerald-50 border-teal-100', labelClass: 'bg-teal-100 text-teal-600', textClass: 'text-teal-700', btnClass: 'text-teal-600 border-teal-200 hover:bg-teal-50', duration: '1h 30m', icon: 'book-open' },
+                    { time: '02:00', period: 'PM', label: 'Thực hành', type: 'moderate', dotClass: 'bg-purple-400', cardClass: 'from-purple-50 to-pink-50 border-purple-100', labelClass: 'bg-purple-100 text-purple-600', textClass: 'text-purple-700', btnClass: 'text-purple-600 border-purple-200 hover:bg-purple-50', duration: '45m', icon: 'calculator' },
+                    { time: '08:00', period: 'PM', label: 'Ôn tập nhẹ nhàng', type: 'light', dotClass: 'bg-blue-400', cardClass: 'from-blue-50 to-indigo-50 border-blue-100', labelClass: 'bg-blue-100 text-blue-600', textClass: 'text-blue-700', btnClass: 'text-blue-600 border-blue-200 hover:bg-blue-50', duration: '1h 00m', icon: 'language' }
+                ];
+                
+                let html = '';
+                for(let i=0; i<3; i++) {
+                    const slot = slots[i];
+                    const courseName = shuffled[i % shuffled.length];
+                    const titleSafe = courseName.replace(/'/g, "\\'");
+                    html += `
+                        <div class="flex gap-6 relative z-10">
+                            <div class="w-16 text-right shrink-0 pt-1">
+                                <p class="text-sm font-bold text-gray-800">${slot.time}</p>
+                                <p class="text-xs text-gray-400">${slot.period}</p>
+                            </div>
+                            <div class="w-4 h-4 rounded-full ${slot.dotClass} border-4 border-white shadow-sm mt-1.5 shrink-0 z-10 -ml-[25px]"></div>
+                            <div class="flex-1 bg-gradient-to-r ${slot.cardClass} rounded-2xl p-5 border hover:shadow-md transition-shadow">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="${slot.labelClass} text-xs font-bold px-3 py-1 rounded-lg shadow-sm">${slot.label}</span>
+                                    <span class="text-xs font-bold ${slot.labelClass.replace('bg-', 'text-')} bg-white rounded-lg px-3 py-1 shadow-sm"><i class="far fa-clock mr-1"></i> ${slot.duration}</span>
+                                </div>
+                                <h3 class="font-bold text-gray-800 text-lg mb-1">${courseName}</h3>
+                                <p class="text-sm ${slot.textClass} font-medium mb-4"><i class="fas fa-${slot.icon} mr-1"></i> Daily Adaptive Session</p>
+                                <button onclick="window.startQuiz('${titleSafe}', '${slot.type}')" class="w-full py-2.5 bg-white ${slot.btnClass} border rounded-xl font-bold transition-colors shadow-sm">
+                                    Start Lesson
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                timeline.innerHTML = html;
+            }
+
+            window.isMistakePractice = false;
+
+            function renderAnalyticsMistakes() {
+                const container = document.getElementById('analytics-mistakes-list');
+                if (!container) return;
+                container.innerHTML = '';
+                
+                if (!dashboardState.mistakes || dashboardState.mistakes.length === 0) {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center p-8 text-center">
+                            <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-3xl mb-4">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-800 mb-1">Tuyệt vời!</h4>
+                            <p class="text-sm text-gray-500">Bạn chưa có lỗi sai nào cần khắc phục.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                dashboardState.mistakes.forEach((mistake) => {
+                    const el = document.createElement('div');
+                    el.className = 'flex items-center justify-between p-5 rounded-2xl border border-orange-100 bg-gradient-to-r from-orange-50 to-red-50 hover:from-orange-100 hover:to-red-100 transition-colors group';
+                    
+                    const shortQ = mistake.q.length > 40 ? mistake.q.substring(0, 40) + '...' : mistake.q;
+                    
+                    el.innerHTML = `
+                        <div class="flex-1 pr-4">
+                            <p class="font-bold text-gray-800 text-sm mb-1">${shortQ}</p>
+                            <p class="text-xs text-orange-600 font-medium"><i class="fas fa-times-circle mr-1"></i> ${mistake.course || 'Quiz'} • Sai ${mistake.count || 1} lần</p>
+                        </div>
+                        <button class="shrink-0 bg-white border-2 border-orange-200 text-orange-500 font-bold px-4 py-2 rounded-xl group-hover:bg-gradient-to-r group-hover:from-orange-400 group-hover:to-red-500 group-hover:text-white group-hover:border-transparent transition-all shadow-sm" onclick="startMistakePractice('${mistake.q}')">
+                            <i class="fas fa-redo-alt mr-1"></i> Luyện tập
+                        </button>
+                    `;
+                    container.appendChild(el);
+                });
+                
+                // Add a practice all button
+                if (dashboardState.mistakes.length > 1) {
+                    const allBtn = document.createElement('button');
+                    allBtn.className = 'mt-2 w-full bg-gradient-to-r from-orange-400 to-red-500 text-white font-bold py-3 rounded-xl shadow-md hover:scale-105 transition-transform';
+                    allBtn.innerHTML = '<i class="fas fa-dumbbell mr-2"></i> Ôn tập tất cả lỗi sai';
+                    allBtn.onclick = () => startMistakePractice();
+                    container.appendChild(allBtn);
+                }
+            }
+
+            window.startMistakePractice = function(specificQ = null) {
+                if (!dashboardState.mistakes || dashboardState.mistakes.length === 0) return;
+                
+                window.isMistakePractice = true;
+                switchToView('exercise-view');
+                if (exerciseTitle) {
+                    exerciseTitle.innerHTML = `Bài tập củng cố <span class="text-sm ml-3 font-normal text-orange-600 bg-orange-50 px-2 py-1 rounded">Mục tiêu: Xóa lỗi sai</span>`;
+                }
+                currentQuizCourse = "Mistake Practice";
+                
+                let practiceQuestions = [...dashboardState.mistakes];
+                if (specificQ) {
+                    practiceQuestions = practiceQuestions.filter(q => q.q === specificQ);
+                }
+                // Shuffle
+                mockQuestions = practiceQuestions.sort(() => 0.5 - Math.random());
+                
+                exerciseLoading.classList.remove('hidden');
+                exerciseQuiz.classList.add('hidden');
+                exerciseResults.classList.add('hidden');
+                currentQIndex = 0;
+                score = 0;
+                
+                setTimeout(() => {
+                    exerciseLoading.classList.add('hidden');
+                    exerciseQuiz.classList.remove('hidden');
+                    startTime = Date.now();
+                    loadQuestion();
+                }, 1000);
+            };
+
+            window.startFocusedReview = function() {
+                window.isMistakePractice = false;
+                switchToView('exercise-view');
+                if (exerciseTitle) {
+                    exerciseTitle.innerHTML = `Focused Review: Elasticity of Demand <span class="text-sm ml-3 font-normal text-amber-600 bg-amber-50 px-2 py-1 rounded">🎯 Lấp đầy lỗ hổng</span>`;
+                }
+                currentQuizCourse = "Elasticity of Demand";
+                
+                const targetedQuestions = [
+                    { type: 'mcq', q: "When demand is perfectly inelastic, the demand curve is ______?", options: ["Horizontal", "Vertical", "Downward sloping", "Upward sloping"], answer: 1 },
+                    { type: 'tf', q: "True or False: If price elasticity of demand is greater than 1, demand is considered elastic.", options: ["True", "False"], answer: 0 },
+                    { type: 'fitb', q: "If demand is elastic, an increase in price will ______ (reduce/increase) total revenue.", answerText: "reduce" },
+                    { type: 'mcq', q: "Which of the following would make demand for a good more elastic?", options: ["Fewer close substitutes", "The good is a necessity", "A longer time horizon", "A smaller share of the consumer's budget"], answer: 2 },
+                    { type: 'tf', q: "True or False: The mid-point method is commonly used to calculate elasticity because it gives the same result regardless of the direction of change.", options: ["True", "False"], answer: 0 }
+                ];
+                
+                let macroTitle = Object.keys(courseData).find(k => k.toLowerCase().includes("macro") || k.toLowerCase().includes("vĩ mô"));
+                if (macroTitle && courseData[macroTitle].text) {
+                    let text = courseData[macroTitle].text;
+                    let sentences = text.split(/[\n.!?]+/).map(s => s.trim());
+                    let gapSentences = sentences.filter(s => s.toLowerCase().includes("elastic") || s.toLowerCase().includes("co giãn") || s.toLowerCase().includes("demand") || s.toLowerCase().includes("cầu"));
+                    
+                    if (gapSentences.length >= 3) {
+                        let generated = generateQuestionsFromText(gapSentences.join('. '), 'advanced');
+                        if (generated && generated.length > 0) {
+                            mockQuestions = generated;
+                        } else {
+                            mockQuestions = targetedQuestions;
+                        }
+                    } else {
+                        mockQuestions = targetedQuestions;
+                    }
+                } else {
+                    mockQuestions = targetedQuestions;
+                }
+                
+                exerciseLoading.classList.remove('hidden');
+                exerciseQuiz.classList.add('hidden');
+                exerciseResults.classList.add('hidden');
+                currentQIndex = 0;
+                score = 0;
+                
+                showToast("🎯 Analyzing performance... Generating targeted gap-closing exercises!");
+                
+                setTimeout(() => {
+                    exerciseLoading.classList.add('hidden');
+                    exerciseQuiz.classList.remove('hidden');
+                    startTime = Date.now();
+                    loadQuestion();
+                }, 1500);
+            };
+
+            document.getElementById('start-focused-review-btn')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.startFocusedReview();
+            });
+            
+            let saveTimeout = null;
+            window.saveData = async function() {
+                if(!localStorage.getItem('token')) return;
+                if (saveTimeout) clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(async () => {
+                    try {
+                        await fetch('/api/data', {
+                            method: 'POST',
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({ dashboardState, courseData })
+                        });
+                    } catch(e) {}
+                }, 1000);
+            }
+            
+            if (token) {
+                loadDataAndStart();
+            } else {
+                showLogin();
+            }
+            
+            document.getElementById('go-to-register').addEventListener('click', () => {
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('register-view').classList.remove('hidden');
+            });
+            
+            document.getElementById('go-to-login').addEventListener('click', () => {
+                document.getElementById('register-view').classList.add('hidden');
+                document.getElementById('login-view').classList.remove('hidden');
+            });
+            
+            document.getElementById('logout-btn')?.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('username');
+                courseData = {};
+                dashboardState = { totalCourses: 1, completedQuizzes: 0, totalScore: 0, totalQuestions: 0, radarStats: [0.8, 0.7, 0.9, 0.4, 0.85] };
+                showLogin();
+                showToast("Logged out successfully");
+            });
+
+            document.getElementById('register-submit-btn')?.addEventListener('click', async () => {
+                const u = document.getElementById('register-username').value.trim();
+                const p = document.getElementById('register-password').value.trim();
+                if(!u || !p) return showToast("Please fill all fields");
+                
+                try {
+                    const res = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({username: u, password: p})
+                    });
+                    if(res.ok) {
+                        showToast("Registration successful! Please log in.");
+                        document.getElementById('go-to-login').click();
+                    } else {
+                        let errText = "Registration failed. Username might exist.";
+                        try { errText = await res.text(); } catch(e) {}
+                        showToast(`Registration failed: ${errText.substring(0, 50)}`);
+                    }
+                } catch(e) { showToast("Network error"); }
+            });
+
+            document.getElementById('login-submit-btn')?.addEventListener('click', async () => {
+                const u = document.getElementById('login-username').value.trim();
+                const p = document.getElementById('login-password').value.trim();
+                if(!u || !p) return showToast("Please fill all fields");
+                
+                try {
+                    const res = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({username: u, password: p})
+                    });
+                    if(res.ok) {
+                        const data = await res.json();
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('username', data.username);
+                        loadDataAndStart();
+                    } else {
+                        let errText = "Invalid credentials";
+                        try { errText = await res.text(); } catch(e) {}
+                        showToast(`Login failed: ${errText.substring(0, 50)}`);
+                    }
+                } catch(e) { showToast("Network error"); }
+            });
+
+            // Personalized Greeting Logic
+            const greetings = [
+                "Mate!", "Hey, what’s up?", "Cheers!", "You right?",
+                "How ya goin'?", "How are ya?", "Howdy!",
+                "What’s going on?", "What do you know?", "How’s this weather?"
+            ];
+            const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+            
+            const hour = new Date().getHours();
+            let timeOfDay = 'morning';
+            if (hour >= 12 && hour < 17) timeOfDay = 'afternoon';
+            else if (hour >= 17) timeOfDay = 'evening';
+            
+            const greetingTextElement = document.getElementById('greeting-text');
+            if (greetingTextElement) {
+                greetingTextElement.innerHTML = `${randomGreeting} Good ${timeOfDay}, Nam! 👋`;
+            }
+
+            // Toast Notification System
+            function showToast(message) {
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-6 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-xl shadow-lg z-50 transition-all duration-300 opacity-0 translate-y-[-20px] font-medium text-sm';
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                // Animate in
+                requestAnimationFrame(() => {
+                    toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+                    toast.classList.add('opacity-100', 'translate-y-0');
+                });
+
+                // Remove after 2.5 seconds
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-[-20px]');
+                    setTimeout(() => toast.remove(), 300);
+                }, 2500);
+            }
+
+            // Navigation Links Interaction
+            const navLinks = document.querySelectorAll('nav a');
+            const viewSections = document.querySelectorAll('.view-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove active state from all
+                    navLinks.forEach(l => {
+                        l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer';
+                    });
+                    
+                    // Add active state to clicked
+                    link.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors';
+                    
+                    // Handle View Switching
+                    const targetId = link.getAttribute('data-target');
+                    if (targetId) {
+                        viewSections.forEach(section => {
+                            section.classList.add('hidden');
+                        });
+                        const targetSection = document.getElementById(targetId);
+                        if (targetSection) {
+                            targetSection.classList.remove('hidden');
+                        }
+                    }
+
+                    showToast('Navigated to ' + link.textContent.trim());
+                });
+            });
+
+            // Generic Buttons Interaction
+            const genericButtons = document.querySelectorAll('button:not(#send-btn):not(#start-focused-review-btn)');
+            genericButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const btnText = btn.textContent.trim() || 'Button';
+                    showToast(btnText + ' clicked!');
+                });
+            });
+
+            // Task Checklist Interaction
+            const taskItems = document.querySelectorAll('.task-item');
+            taskItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const cb = item.querySelector('.task-checkbox');
+                    const text = item.querySelector('.task-text');
+                    
+                    const isChecked = cb.classList.toggle('checked');
+                    if (isChecked) {
+                        cb.className = 'task-checkbox checked w-6 h-6 rounded-md bg-teal-400 text-white flex items-center justify-center mr-4 shrink-0 transition-all';
+                        cb.innerHTML = '<i class="fas fa-check text-xs"></i>';
+                        text.className = 'task-text flex-grow text-gray-400 line-through font-medium';
+                        item.className = 'task-item flex items-center p-4 rounded-xl border border-gray-100 bg-gray-50 opacity-75 cursor-pointer transition-colors';
+                        showToast('Task completed!');
+                    } else {
+                        cb.className = 'task-checkbox w-6 h-6 rounded-md border-2 border-gray-300 mr-4 shrink-0 transition-all';
+                        cb.innerHTML = '';
+                        text.className = 'task-text flex-grow text-gray-800 font-medium';
+                        item.className = 'task-item flex items-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors shadow-sm';
+                    }
+                });
+            });
+
+            // Chat Widget Interaction
+            const input = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('send-btn');
+            const chatBody = document.getElementById('chat-body');
+            const chatHeader = document.querySelector('.bg-gradient-to-r.from-blue-500.to-blue-400');
+            const chatWidget = chatHeader.parentElement;
+
+            // Toggle chat minimization
+            chatHeader.addEventListener('click', () => {
+                const isMinimized = chatWidget.classList.contains('translate-y-[calc(100%-60px)]');
+                const chevron = chatHeader.querySelector('.fa-chevron-down, .fa-chevron-up');
+                
+                if (isMinimized) {
+                    chatWidget.classList.remove('translate-y-[calc(100%-60px)]');
+                    chevron.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                } else {
+                    chatWidget.classList.add('translate-y-[calc(100%-60px)]');
+                    chevron.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                }
+            });
+
+            let chatHistory = [];
+
+            async function sendMessage() {
+                const text = input.value.trim();
+                if (!text) return;
+
+                // Create User message
+                const userMsg = document.createElement('div');
+                userMsg.className = 'bg-blue-500 text-white rounded-2xl rounded-tr-sm p-3 shadow-sm text-sm w-11/12 self-end leading-relaxed';
+                userMsg.textContent = text;
+                chatBody.appendChild(userMsg);
+
+                input.value = '';
+                chatBody.scrollTop = chatBody.scrollHeight;
+
+                const loadingMsg = document.createElement('div');
+                loadingMsg.className = 'bg-white border border-gray-100 rounded-2xl rounded-tl-sm p-3 shadow-sm text-sm text-gray-500 w-11/12 self-start italic';
+                loadingMsg.textContent = 'AI is typing...';
+                chatBody.appendChild(loadingMsg);
+                chatBody.scrollTop = chatBody.scrollHeight;
+
+                try {
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: text, history: chatHistory })
+                    });
+                    
+                    chatHistory.push({ role: 'user', text: text });
+                    
+                    loadingMsg.remove();
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'bg-white border border-gray-100 rounded-2xl rounded-tl-sm p-3 shadow-sm text-sm text-gray-700 w-11/12 self-start leading-relaxed whitespace-pre-wrap';
+                    chatBody.appendChild(botMsg);
+                    
+                    if (!response.ok) {
+                        botMsg.textContent = "Error: " + await response.text();
+                        return;
+                    }
+
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder("utf-8");
+                    let fullReply = "";
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        fullReply += decoder.decode(value, { stream: true });
+                        botMsg.textContent = fullReply;
+                        chatBody.scrollTop = chatBody.scrollHeight;
+                    }
+                    
+                    chatHistory.push({ role: 'model', text: fullReply });
+                } catch (e) {
+                    loadingMsg.textContent = 'Failed to connect to server.';
+                }
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            sendBtn.addEventListener('click', sendMessage);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            // --- NEW FEATURES LOGIC ---
+
+            // 1. Notifications Toggle
+            const notifBell = document.getElementById('notification-bell');
+            const notifDropdown = document.getElementById('notification-dropdown');
+            if(notifBell && notifDropdown) {
+                notifBell.addEventListener('click', () => {
+                    notifDropdown.classList.toggle('hidden');
+                });
+                // Close if clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!notifBell.contains(e.target) && !notifDropdown.contains(e.target)) {
+                        notifDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Practice Buttons Interaction
+            const practiceBtns = document.querySelectorAll('.practice-btn');
+            practiceBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showToast('Đang tạo bài luyện tập đặc biệt cho bạn...');
+                    setTimeout(() => {
+                        if (typeof switchToView === 'function') {
+                            switchToView('exercise-view');
+                        }
+                    }, 1000);
+                });
+            });
+
+            // 2. Add Material View & Logic
+            const addMaterialBtn = document.getElementById('add-material-btn');
+            const dropZone = document.getElementById('drop-zone');
+            const fileUpload = document.getElementById('file-upload');
+            const uploadProgress = document.getElementById('upload-progress');
+            const uploadBar = document.getElementById('upload-bar');
+            const coursesGrid = document.getElementById('courses-grid');
+
+            function switchToView(targetId) {
+                viewSections.forEach(section => section.classList.add('hidden'));
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) targetSection.classList.remove('hidden');
+            }
+
+            if (addMaterialBtn) {
+                addMaterialBtn.addEventListener('click', () => {
+                    switchToView('add-material-view');
+                    // Remove active state from sidebar links
+                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer');
+                });
+            }
+
+            if (dropZone && fileUpload) {
+                dropZone.addEventListener('click', () => fileUpload.click());
+                
+                // Prevent default drag behaviors
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, preventDefaults, false);
+                });
+                function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+                dropZone.addEventListener('drop', handleDrop, false);
+
+                function handleDrop(e) {
+                    let dt = e.dataTransfer;
+                    let files = dt.files;
+                    handleFiles(files);
+                }
+
+                fileUpload.addEventListener('change', function() {
+                    handleFiles(this.files);
+                });
+
+                function handleFiles(files) {
+                    if (files.length > 0) {
+                        const file = files[0];
+                        const name = file.name.toLowerCase();
+                        const isTextFile = name.endsWith('.txt') || file.type.startsWith('text/');
+                        const isPdf = name.endsWith('.pdf') || file.type === 'application/pdf';
+                        const isDocx = name.endsWith('.docx');
+
+                        const processUpload = async () => {
+                            // Simulate upload UI
+                            uploadProgress.classList.remove('hidden');
+                            uploadBar.style.width = '0%';
+                            
+                            setTimeout(() => uploadBar.style.width = '30%', 300);
+                            
+                            let extractedText = null;
+                            try {
+                                if (isTextFile) {
+                                    extractedText = await new Promise(resolve => {
+                                        const r = new FileReader();
+                                        r.onload = e => resolve(e.target.result);
+                                        r.readAsText(file);
+                                    });
+                                } else if (isPdf && typeof window.pdfjsLib !== 'undefined') {
+                                    const arrayBuffer = await file.arrayBuffer();
+                                    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                                    let fullText = '';
+                                    const pagesToExtract = Math.min(pdf.numPages, 3); // Limit to 3 pages
+                                    for (let i = 1; i <= pagesToExtract; i++) {
+                                        const page = await pdf.getPage(i);
+                                        const textContent = await page.getTextContent();
+                                        let pageText = '';
+                                        let lastY = null;
+                                        for (let item of textContent.items) {
+                                            if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) {
+                                                pageText += '\n';
+                                            }
+                                            pageText += item.str;
+                                            lastY = item.transform[5];
+                                        }
+                                        fullText += pageText + '\n';
+                                    }
+                                    extractedText = fullText;
+                                } else if (isDocx && typeof window.mammoth !== 'undefined') {
+                                    const arrayBuffer = await file.arrayBuffer();
+                                    const result = await window.mammoth.extractRawText({arrayBuffer: arrayBuffer});
+                                    extractedText = result.value;
+                                }
+                            } catch (e) {
+                                console.error("Error extracting text", e);
+                            }
+
+                            uploadBar.style.width = '60%';
+
+                            try {
+                                let generatedQuestions = null;
+                                if (extractedText) {
+                                    try {
+                                        const response = await fetch('/api/generate_quiz', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ text: extractedText })
+                                        });
+                                        if (response.ok) {
+                                            generatedQuestions = await response.json();
+                                        }
+                                    } catch (e) {
+                                        console.error("API quiz generation failed during upload, falling back to local...", e);
+                                    }
+
+                                    if (!generatedQuestions || generatedQuestions.length === 0) {
+                                        generatedQuestions = generateQuestionsFromText(extractedText, 'moderate');
+                                    }
+                                }
+                                
+                                uploadBar.style.width = '100%';
+                                
+                                setTimeout(() => {
+                                    uploadProgress.classList.add('hidden');
+                                    uploadBar.style.width = '0%';
+                                    
+                                    const fileName = file.name.split('.')[0] || "New Lesson";
+                                    courseData[fileName] = {
+                                        text: extractedText || "",
+                                        questions: (generatedQuestions && generatedQuestions.length > 0) ? generatedQuestions : allMockQuestions[currentLang],
+                                        history: []
+                                    };
+                                    window.saveData();
+                                    
+                                    const newCard = document.createElement('div');
+                                    newCard.className = 'course-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-transform hover:scale-105 cursor-pointer border-t-4 border-t-teal-400';
+                                    newCard.innerHTML = `
+                                        <div class="w-12 h-12 bg-teal-100 text-teal-500 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-file-alt"></i></div>
+                                        <h3 class="font-bold text-gray-800 mb-2">${fileName}</h3>
+                                        <p class="text-sm text-gray-500 mb-4" data-i18n="just_added">Just Added • AI Generated</p>
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5"><div class="bg-teal-500 h-1.5 rounded-full" style="width: 100%"></div></div>
+                                    `;
+                                    
+                                    newCard.addEventListener('click', () => window.openCourseDetail(fileName));
+                                    if(coursesGrid) coursesGrid.prepend(newCard);
+                                    
+                                    const tasksContainer = document.getElementById('micro-tasks-container');
+                                    if (tasksContainer) {
+                                        const newTask = document.createElement('div');
+                                        newTask.className = 'task-item flex items-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors shadow-sm';
+                                        newTask.innerHTML = `
+                                            <div class="task-checkbox w-6 h-6 rounded-md border-2 border-gray-300 mr-4 shrink-0 transition-all"></div>
+                                            <div class="task-text flex-grow text-gray-800 font-medium">Review generated exercises for ${fileName}</div>
+                                            <span class="bg-blue-50 text-blue-500 px-2.5 py-1 rounded-md text-xs font-bold tracking-wide ml-3 shrink-0">NEW</span>
+                                        `;
+                                        newTask.addEventListener('click', function() {
+                                            const cb = this.querySelector('.task-checkbox');
+                                            const text = this.querySelector('.task-text');
+                                            const isChecked = cb.classList.toggle('checked');
+                                            if (isChecked) {
+                                                cb.className = 'task-checkbox checked w-6 h-6 rounded-md bg-teal-400 text-white flex items-center justify-center mr-4 shrink-0 transition-all';
+                                                cb.innerHTML = '<i class="fas fa-check text-xs"></i>';
+                                                text.className = 'task-text flex-grow text-gray-400 line-through font-medium';
+                                                this.className = 'task-item flex items-center p-4 rounded-xl border border-gray-100 bg-gray-50 opacity-75 cursor-pointer transition-colors';
+                                                showToast('Task completed!');
+                                            } else {
+                                                cb.className = 'task-checkbox w-6 h-6 rounded-md border-2 border-gray-300 mr-4 shrink-0 transition-all';
+                                                cb.innerHTML = '';
+                                                text.className = 'task-text flex-grow text-gray-800 font-medium';
+                                                this.className = 'task-item flex items-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors shadow-sm';
+                                            }
+                                        });
+                                        tasksContainer.prepend(newTask);
+                                    }
+
+                                    showToast(`Successfully created AI lesson from ${file.name}`);
+                                    switchToView('courses-view');
+                                }, 500);
+                            } catch(e) {
+                                console.error("API error", e);
+                                showToast("Failed to generate AI quiz.");
+                                uploadProgress.classList.add('hidden');
+                            }
+                        };
+                        processUpload();
+                    }
+                }
+            }
+
+            // 3. Profile Avatar & Settings Switch
+            const profileAvatarBtn = document.getElementById('profile-avatar-btn');
+            if (profileAvatarBtn) {
+                profileAvatarBtn.addEventListener('click', () => {
+                    switchToView('settings-view');
+                    // Update active nav link
+                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer');
+                    const settingsLink = document.querySelector('a[data-target="settings-view"]');
+                    if(settingsLink) settingsLink.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors';
+                });
+            }
+
+            const avatarUploadTrigger = document.getElementById('avatar-upload-trigger');
+            const avatarInput = document.getElementById('avatar-input');
+            const headerAvatarImg = document.getElementById('avatar-img');
+            const headerAvatarInitials = document.getElementById('avatar-initials');
+            const settingsAvatarImg = document.getElementById('settings-avatar-img');
+            const settingsAvatarInitials = document.getElementById('settings-avatar-initials');
+
+            if (avatarUploadTrigger && avatarInput) {
+                avatarUploadTrigger.addEventListener('click', () => avatarInput.click());
+                
+                avatarInput.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            headerAvatarImg.src = e.target.result;
+                            settingsAvatarImg.src = e.target.result;
+                            
+                            headerAvatarImg.classList.remove('hidden');
+                            settingsAvatarImg.classList.remove('hidden');
+                            headerAvatarInitials.classList.add('hidden');
+                            settingsAvatarInitials.classList.add('hidden');
+                            
+                            showToast('Profile picture updated successfully!');
+                        }
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                });
+            }
+
+            // 4. Localization (i18n) Engine
+            const translations = {
+                en: {
+                    nav_dashboard: "Dashboard",
+                    nav_courses: "Courses",
+                    nav_schedule: "Schedule",
+                    nav_analytics: "Analytics",
+                    nav_settings: "Settings",
+                    notifications: "Notifications",
+                    system: "System",
+                    just_now: "Just now",
+                    notification_welcome: "Welcome to Freshman Analytics! We're excited to have you here. This platform is designed to help you analyze your study statistics and optimize your learning journey. Start maximizing your efficiency today!",
+                    add_material: "+ Add Material",
+                    upload_title: "Upload Materials",
+                    upload_desc: "Drag and drop your documents, PDFs, or files here, or click to browse. We'll automatically create compatible lessons.",
+                    processing: "Processing and creating lessons...",
+                    my_courses: "My Courses",
+                    my_schedule: "My Schedule",
+                    schedule_desc: "Your upcoming classes and events will appear here.",
+                    detailed_analytics: "Detailed Analytics",
+                    analytics_desc: "In-depth statistics about your learning progress will appear here.",
+                    account_settings: "Account Settings",
+                    profile_picture: "Profile Picture",
+                    profile_picture_desc: "Click the camera icon to upload a new avatar.",
+                    language_pref: "Language Preference",
+                    just_added: "Just Added • Processing content...",
+                    course_macro: "Macroeconomics 101",
+                    course_macro_desc: "Dr. Smith • 12 Lessons",
+                    submit_answer: "Submit Answer",
+                    next_question: "Next Question",
+                    finish_quiz: "Finish Quiz",
+                    logout: "Logout",
+                    completion_rate: "Completion Rate",
+                    ontime_rate: "On-Time Rate",
+                    avg_time: "Avg. Completion Time"
+                },
+                vi: {
+                    nav_dashboard: "Bảng Điều Khiển",
+                    nav_courses: "Khóa Học",
+                    nav_schedule: "Lịch Trình",
+                    nav_analytics: "Phân Tích",
+                    nav_settings: "Cài Đặt",
+                    notifications: "Thông Báo",
+                    system: "Hệ Thống",
+                    just_now: "Vừa xong",
+                    notification_welcome: "Chào mừng đến với Freshman Analytics! Chúng tôi rất vui được đón tiếp bạn. Nền tảng này được thiết kế để giúp bạn phân tích thống kê học tập và tối ưu hóa hành trình học của mình. Bắt đầu tối đa hóa hiệu quả ngay hôm nay!",
+                    add_material: "+ Thêm Tài Liệu",
+                    upload_title: "Tải Lên Tài Liệu",
+                    upload_desc: "Kéo thả tài liệu, PDF hoặc file vào đây, hoặc nhấp để duyệt. Chúng tôi sẽ tự động tạo bài học tương thích.",
+                    processing: "Đang xử lý và tạo bài học...",
+                    my_courses: "Khóa Học Của Tôi",
+                    my_schedule: "Lịch Trình Của Tôi",
+                    schedule_desc: "Các lớp học và sự kiện sắp tới của bạn sẽ xuất hiện ở đây.",
+                    detailed_analytics: "Phân Tích Chi Tiết",
+                    analytics_desc: "Các thống kê chuyên sâu về tiến độ học tập của bạn sẽ xuất hiện ở đây.",
+                    account_settings: "Cài Đặt Tài Khoản",
+                    profile_picture: "Ảnh Đại Diện",
+                    profile_picture_desc: "Nhấp vào biểu tượng camera để tải lên ảnh đại diện mới.",
+                    language_pref: "Tùy Chọn Ngôn Ngữ",
+                    just_added: "Vừa Thêm • Đang xử lý nội dung...",
+                    course_macro: "Kinh tế vĩ mô 101",
+                    course_macro_desc: "Tiến sĩ Smith • 12 Bài học",
+                    submit_answer: "Nộp Câu Trả Lời",
+                    next_question: "Câu Tiếp Theo",
+                    finish_quiz: "Hoàn Thành",
+                    logout: "Đăng Xuất",
+                    completion_rate: "Tỷ Lệ Hoàn Thành",
+                    ontime_rate: "Tỷ Lệ Đúng Hạn",
+                    avg_time: "TG Hoàn Thành TB"
+                },
+                fr: {
+                    nav_dashboard: "Tableau de bord",
+                    nav_courses: "Cours",
+                    nav_schedule: "Calendrier",
+                    nav_analytics: "Analytique",
+                    nav_settings: "Paramètres",
+                    notifications: "Notifications",
+                    system: "Système",
+                    just_now: "À l'instant",
+                    notification_welcome: "Bienvenue sur Freshman Analytics ! Nous sommes ravis de vous compter parmi nous. Cette plateforme est conçue pour vous aider à analyser vos statistiques d'étude et à optimiser votre parcours d'apprentissage. Commencez à maximiser votre efficacité dès aujourd'hui !",
+                    add_material: "+ Ajouter Matériel",
+                    upload_title: "Télécharger du Matériel",
+                    upload_desc: "Faites glisser et déposez vos documents, PDF ou fichiers ici, ou cliquez pour parcourir. Nous créerons automatiquement des leçons compatibles.",
+                    processing: "Traitement et création de leçons...",
+                    my_courses: "Mes Cours",
+                    my_schedule: "Mon Calendrier",
+                    schedule_desc: "Vos prochains cours et événements apparaîtront ici.",
+                    detailed_analytics: "Analyses Détaillées",
+                    analytics_desc: "Des statistiques approfondies sur vos progrès d'apprentissage apparaîtront ici.",
+                    account_settings: "Paramètres du Compte",
+                    profile_picture: "Photo de Profil",
+                    profile_picture_desc: "Cliquez sur l'icône de l'appareil photo pour télécharger un nouvel avatar.",
+                    language_pref: "Préférence de Langue",
+                    just_added: "Vient d'être ajouté • Traitement du contenu...",
+                    course_macro: "Macroéconomie 101",
+                    course_macro_desc: "Dr. Smith • 12 Leçons",
+                    submit_answer: "Soumettre",
+                    next_question: "Suivant",
+                    finish_quiz: "Terminer",
+                    logout: "Se Déconnecter",
+                    completion_rate: "Taux d'Achèvement",
+                    ontime_rate: "Taux de Ponctualité",
+                    avg_time: "Temps Moyen"
+                }
+            };
+
+            const allMockQuestions = {
+                en: [
+                    { q: "What is the primary function of the core concepts discussed in this document?", options: ["To define market boundaries", "To explain elasticity", "To outline supply and demand curves", "To calculate marginal revenue"], answer: 1 },
+                    { q: "Which scenario best illustrates the 'Optimal Zone'?", options: ["High stress, low skill", "Low stress, low skill", "High challenge matched with high skill", "Low challenge, high skill"], answer: 2 },
+                    { q: "According to the generated insights, what happens when demand is perfectly inelastic?", options: ["Price drops to zero", "Quantity demanded remains constant regardless of price", "Supply becomes infinite", "Consumers stop buying the product"], answer: 1 }
+                ],
+                vi: [
+                    { q: "Chức năng chính của các khái niệm cốt lõi được thảo luận trong tài liệu này là gì?", options: ["Xác định ranh giới thị trường", "Giải thích độ co giãn", "Phác thảo đường cung và cầu", "Tính doanh thu cận biên"], answer: 1 },
+                    { q: "Tình huống nào minh họa rõ nhất 'Vùng tối ưu'?", options: ["Căng thẳng cao, kỹ năng thấp", "Căng thẳng thấp, kỹ năng thấp", "Thử thách cao phù hợp với kỹ năng cao", "Thử thách thấp, kỹ năng cao"], answer: 2 },
+                    { q: "Theo các phân tích được tạo ra, điều gì xảy ra khi cầu hoàn toàn không co giãn?", options: ["Giá giảm xuống 0", "Lượng cầu không đổi bất kể giá", "Nguồn cung trở nên vô hạn", "Người tiêu dùng ngừng mua sản phẩm"], answer: 1 }
+                ],
+                fr: [
+                    { q: "Quelle est la fonction principale des concepts fondamentaux abordés dans ce document ?", options: ["Définir les frontières du marché", "Expliquer l'élasticité", "Décrire les courbes de l'offre et de la demande", "Calculer le revenu marginal"], answer: 1 },
+                    { q: "Quel scénario illustre le mieux la 'Zone Optimale' ?", options: ["Stress élevé, faible compétence", "Faible stress, faible compétence", "Défi élevé associé à une forte compétence", "Faible défi, forte compétence"], answer: 2 },
+                    { q: "Selon les analyses générées, que se passe-t-il lorsque la demande est parfaitement inélastique ?", options: ["Le prix tombe à zéro", "La quantité demandée reste constante quel que soit le prix", "L'offre devient infinie", "Les consommateurs arrêtent d'acheter le produit"], answer: 1 }
+                ]
+            };
+            
+            let currentLang = 'en';
+            let mockQuestions = allMockQuestions[currentLang];
+
+            const languageSelect = document.getElementById('language-select');
+            if (languageSelect) {
+                currentLang = languageSelect.value || 'en';
+                mockQuestions = allMockQuestions[currentLang];
+
+                languageSelect.addEventListener('change', (e) => {
+                    const lang = e.target.value;
+                    currentLang = lang;
+                    mockQuestions = allMockQuestions[currentLang];
+
+                    document.querySelectorAll('[data-i18n]').forEach(el => {
+                        const key = el.getAttribute('data-i18n');
+                        if (translations[lang] && translations[lang][key]) {
+                            if (el.tagName === 'INPUT') {
+                                el.placeholder = translations[lang][key];
+                            } else {
+                                el.textContent = translations[lang][key];
+                            }
+                        }
+                    });
+                    
+                    const chatInput = document.getElementById('chat-input');
+                    if (chatInput) {
+                        chatInput.placeholder = currentLang === 'vi' ? "Nhập tin nhắn..." : (currentLang === 'fr' ? "Tapez un message..." : "Type a message...");
+                    }
+                    
+                    if (typeof renderCoursesGrid === 'function') renderCoursesGrid();
+                    if (typeof renderScheduleDateSelector === 'function') renderScheduleDateSelector();
+                    if (typeof renderAnalyticsMistakes === 'function') renderAnalyticsMistakes();
+                    
+                    const actionBtn = document.getElementById('quiz-action-btn');
+                    if (actionBtn && !actionBtn.disabled) {
+                        if (currentQIndex < mockQuestions.length - 1) {
+                            actionBtn.textContent = translations[currentLang].next_question || 'Next Question';
+                        } else {
+                            actionBtn.textContent = translations[currentLang].finish_quiz || 'Finish Quiz';
+                        }
+                    } else if (actionBtn && actionBtn.disabled) {
+                        actionBtn.textContent = translations[currentLang].submit_answer || 'Submit Answer';
+                    }
+
+                    showToast(`Language changed to ${lang.toUpperCase()}`);
+                });
+            }
+            // 5. AI Generated Quiz Logic & Dashboard Updates
+            const exerciseLoading = document.getElementById('exercise-loading');
+            const exerciseQuiz = document.getElementById('exercise-quiz');
+            const exerciseResults = document.getElementById('exercise-results');
+            const exerciseTitle = document.getElementById('exercise-title');
+            
+            let currentQIndex = 0;
+            let score = 0;
+            let startTime = 0;
+            let endTime = 0;
+            let selectedOption = null;
+
+            function generateQuestionsFromText(text, difficulty = 'moderate') {
+                if (!text) return null;
+                const sentences = text.split(/[\n.!?]+/) || [];
+                const validSentences = sentences.map(s => s.trim()).filter(s => s.length > 20);
+                if (validSentences.length < 3) return null;
+                
+                validSentences.sort(() => 0.5 - Math.random());
+                let questions = [];
+
+                const tfText = currentLang === 'vi' ? 'Đúng hay Sai' : (currentLang === 'fr' ? 'Vrai ou Faux' : 'True or False');
+                const trueText = currentLang === 'vi' ? 'Đúng' : (currentLang === 'fr' ? 'Vrai' : 'True');
+                const falseText = currentLang === 'vi' ? 'Sai' : (currentLang === 'fr' ? 'Faux' : 'False');
+                const randomWords = currentLang === 'vi' ? ['khái niệm', 'quá trình', 'dữ liệu', 'ví dụ', 'hệ thống', 'biến số', 'phương pháp'] : 
+                                     (currentLang === 'fr' ? ['concept', 'processus', 'données', 'exemple', 'système', 'variable', 'méthode'] : 
+                                     ['concept', 'process', 'data', 'example', 'system', 'variable', 'method']);
+                
+                // Determine number of questions based on difficulty
+                let numQuestions = 3;
+                if (difficulty === 'moderate') numQuestions = 5;
+                if (difficulty === 'advanced') numQuestions = 7;
+                
+                for(let i=0; i<Math.min(numQuestions, validSentences.length); i++) {
+                    let s = validSentences[i];
+                    
+                    let words = s.split(/\s+/).filter(w => {
+                        let clean = w.replace(/[.,!?;:()'"“”]/g, '');
+                        if (w.includes('/') || w.includes('[') || w.includes(']')) return false;
+                        if (/[ˈˌæɑɒɔɛɜɪŋʃθʊʌʒ]/.test(w)) return false;
+                        return clean.length > 3 && /[a-zA-ZÀ-ỹ]/.test(clean);
+                    });
+                    
+                    if (words.length === 0) continue;
+                    
+                    let targetWord = words[Math.floor(Math.random() * words.length)];
+                    let cleanWord = targetWord.replace(/[.,!?;:()'"“”]/g, '');
+                    let qText = s.replace(targetWord, '______');
+                    
+                    // Determine question type based on difficulty and random chance
+                    let typeRand = Math.random();
+                    if (difficulty === 'light') {
+                        if (typeRand > 0.5) {
+                            questions.push({ type: 'tf', q: `${tfText}: "${s}"`, options: [trueText, falseText], answer: 0 });
+                        } else {
+                            let options = [cleanWord];
+                            while(options.length < 4) {
+                                let r = randomWords[Math.floor(Math.random() * randomWords.length)];
+                                if (!options.includes(r)) options.push(r);
+                            }
+                            options.sort(() => 0.5 - Math.random());
+                            questions.push({ type: 'mcq', q: qText, options: options, answer: options.indexOf(cleanWord) });
+                        }
+                    } else if (difficulty === 'advanced') {
+                        if (typeRand > 0.3) {
+                            questions.push({ type: 'fitb', q: qText, answerText: cleanWord.toLowerCase() });
+                        } else {
+                            questions.push({ type: 'tf', q: `${tfText}: "${s.replace(cleanWord, randomWords[0])}"`, options: [trueText, falseText], answer: 1 });
+                        }
+                    } else {
+                        if (typeRand < 0.33) {
+                            questions.push({ type: 'tf', q: `${tfText}: "${s}"`, options: [trueText, falseText], answer: 0 });
+                        } else if (typeRand < 0.66) {
+                            let options = [cleanWord];
+                            while(options.length < 4) {
+                                let r = randomWords[Math.floor(Math.random() * randomWords.length)];
+                                if (!options.includes(r)) options.push(r);
+                            }
+                            options.sort(() => 0.5 - Math.random());
+                            questions.push({ type: 'mcq', q: qText, options: options, answer: options.indexOf(cleanWord) });
+                        } else {
+                            questions.push({ type: 'fitb', q: qText, answerText: cleanWord.toLowerCase() });
+                        }
+                    }
+                }
+                
+                return questions.length > 0 ? questions : null;
+            }
+
+            // Make existing default course card clickable too
+            const defaultCourseCard = document.querySelector('.course-card');
+            if (defaultCourseCard) {
+                defaultCourseCard.addEventListener('click', () => {
+                    const courseTitleElement = defaultCourseCard.querySelector('h3');
+                    const title = courseTitleElement ? courseTitleElement.textContent : translations[currentLang].course_macro;
+                    window.openCourseDetail(title);
+                });
+            }
+
+            document.getElementById('back-to-courses')?.addEventListener('click', () => window.openCourseDetail(currentQuizCourse));
+
+            window.openCourseDetail = function(courseName) {
+                currentDetailCourse = courseName;
+                document.getElementById('detail-course-title').textContent = courseName;
+                
+                if (!courseData[courseName]) {
+                    courseData[courseName] = { text: "", questions: allMockQuestions[currentLang], history: [] };
+                }
+
+                const historyList = document.getElementById('detail-history-list');
+                historyList.innerHTML = '';
+                const history = courseData[courseName].history || [];
+                if (history.length === 0) {
+                    historyList.innerHTML = '<div class="text-sm text-gray-500 italic text-center mt-4">No quiz attempts yet.</div>';
+                } else {
+                    history.forEach((h, idx) => {
+                        historyList.innerHTML += `
+                            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 flex justify-between items-center">
+                                <div>
+                                    <div class="text-sm font-bold text-gray-700">Attempt ${idx + 1}</div>
+                                    <div class="text-xs text-gray-500">${h.date}</div>
+                                </div>
+                                <div class="text-teal-600 font-bold bg-teal-50 px-2 py-1 rounded-md text-sm">${h.score}/${h.total}</div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                switchToView('course-detail-view');
+            };
+
+            document.getElementById('back-to-courses-from-detail')?.addEventListener('click', () => {
+                switchToView('courses-view');
+            });
+
+            document.getElementById('detail-delete-course-btn')?.addEventListener('click', () => {
+                if (currentDetailCourse) {
+                    window.deleteCourse(currentDetailCourse);
+                    switchToView('courses-view');
+                }
+            });
+
+            document.getElementById('detail-start-quiz-btn')?.addEventListener('click', () => {
+                if (currentDetailCourse) {
+                    window.startQuiz(currentDetailCourse, 'moderate', 3);
+                }
+            });
+
+            document.getElementById('detail-generate-btn')?.addEventListener('click', async () => {
+                const num = parseInt(document.getElementById('detail-num-questions').value) || 5;
+                const text = courseData[currentDetailCourse]?.text;
+                
+                const btn = document.getElementById('detail-generate-btn');
+                const indicator = document.getElementById('detail-generating-indicator');
+                
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                indicator.classList.remove('hidden');
+                
+                let generatedQs = null;
+
+                if (text) {
+                    try {
+                        const response = await fetch('/api/generate_quiz', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ text: text, num_questions: num })
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data && data.length > 0) {
+                                generatedQs = data;
+                            }
+                        } else {
+                            console.error("Server API failed, using client-side generator");
+                        }
+                    } catch(e) {
+                        console.error("Fetch error during generation, using client-side generator:", e);
+                    }
+                }
+
+                // Resilient offline fallback
+                if (!generatedQs && text) {
+                    showToast("⚠️ AI Server bận. Đang tự động tạo bộ câu hỏi chất lượng cao offline...");
+                    generatedQs = generateQuestionsFromText(text, 'moderate');
+                }
+
+                if (generatedQs && generatedQs.length > 0) {
+                    // Limit to requested count
+                    if (generatedQs.length > num) {
+                        generatedQs = generatedQs.slice(0, num);
+                    }
+                    courseData[currentDetailCourse].questions = generatedQs;
+                    window.saveData();
+                    showToast(`Đã tạo thành công ${generatedQs.length} câu hỏi!`);
+                    window.startQuiz(currentDetailCourse, 'moderate', num);
+                } else {
+                    showToast("Sử dụng bộ câu hỏi ôn tập mẫu.");
+                    courseData[currentDetailCourse].questions = allMockQuestions[currentLang];
+                    window.startQuiz(currentDetailCourse, 'moderate', num);
+                }
+
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                indicator.classList.add('hidden');
+            });
+
+            window.startQuiz = function(title, difficulty = 'moderate', limit = null) {
+                switchToView('exercise-view');
+                if (exerciseTitle) {
+                    let diffLabel = difficulty === 'advanced' ? '🚀 Nâng cao' : (difficulty === 'light' ? '☕ Nhẹ nhàng' : '📚 Vừa vừa');
+                    exerciseTitle.innerHTML = `AI Quiz: ${title} <span class="text-sm ml-3 font-normal text-teal-600 bg-teal-50 px-2 py-1 rounded">${diffLabel}</span>`;
+                }
+                currentQuizCourse = title;
+                
+                if (courseData[title] && courseData[title].questions && courseData[title].questions.length > 0) {
+                    let savedQs = [...courseData[title].questions].sort(() => 0.5 - Math.random());
+                    if (limit) {
+                        mockQuestions = savedQs.slice(0, limit);
+                    } else {
+                        if (difficulty === 'light') {
+                            mockQuestions = savedQs.slice(0, Math.max(1, Math.floor(savedQs.length / 2)));
+                        } else if (difficulty === 'advanced') {
+                            mockQuestions = savedQs;
+                        } else {
+                            mockQuestions = savedQs.slice(0, Math.min(savedQs.length, 5));
+                        }
+                    }
+                } else if (courseData[title] && courseData[title].text) {
+                    let generated = generateQuestionsFromText(courseData[title].text, difficulty);
+                    if (generated && generated.length > 0) {
+                        if (limit) {
+                            mockQuestions = generated.slice(0, limit);
+                        } else {
+                            mockQuestions = generated;
+                        }
+                    } else {
+                        mockQuestions = [...allMockQuestions[currentLang]].sort(() => 0.5 - Math.random());
+                        if (difficulty === 'light') mockQuestions = mockQuestions.slice(0, 2);
+                    }
+                } else {
+                    mockQuestions = [...allMockQuestions[currentLang]].sort(() => 0.5 - Math.random());
+                    if (difficulty === 'light') mockQuestions = mockQuestions.slice(0, 2);
+                    if (limit) mockQuestions = mockQuestions.slice(0, limit);
+                }
+                
+                // Reset states
+                exerciseLoading.classList.remove('hidden');
+                exerciseQuiz.classList.add('hidden');
+                exerciseResults.classList.add('hidden');
+                currentQIndex = 0;
+                score = 0;
+                
+                // Simulate AI generation time
+                setTimeout(() => {
+                    exerciseLoading.classList.add('hidden');
+                    exerciseQuiz.classList.remove('hidden');
+                    startTime = Date.now();
+                    loadQuestion();
+                }, 2000);
+            };
+
+            function loadQuestion() {
+                const q = mockQuestions[currentQIndex];
+                selectedOption = null;
+                
+                document.getElementById('quiz-progress-text').textContent = `Question ${currentQIndex + 1} of ${mockQuestions.length}`;
+                
+                // Update dots
+                const dotsContainer = document.getElementById('quiz-progress-dots');
+                dotsContainer.innerHTML = '';
+                for(let i=0; i<mockQuestions.length; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = `w-2 h-2 rounded-full ${i === currentQIndex ? 'bg-teal-500' : (i < currentQIndex ? 'bg-teal-200' : 'bg-gray-200')}`;
+                    dotsContainer.appendChild(dot);
+                }
+                
+                document.getElementById('quiz-question').textContent = q.q;
+                
+                const optionsContainer = document.getElementById('quiz-options');
+                optionsContainer.innerHTML = '';
+                
+                const actionBtn = document.getElementById('quiz-action-btn');
+                actionBtn.textContent = translations[currentLang].submit_answer || 'Submit Answer';
+                actionBtn.className = 'bg-gray-200 text-gray-400 px-8 py-3 rounded-xl font-bold cursor-not-allowed transition-colors';
+                actionBtn.disabled = true;
+                actionBtn.onclick = checkAnswer;
+                
+                if (q.type === 'fitb') {
+                    optionsContainer.className = 'flex flex-col gap-4 mb-8';
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'p-4 border-2 border-gray-200 rounded-xl focus:border-teal-500 focus:outline-none text-lg w-full';
+                    input.placeholder = 'Type your answer here...';
+                    input.oninput = (e) => {
+                        selectedOption = e.target.value.trim();
+                        if (selectedOption.length > 0) {
+                            actionBtn.className = 'bg-teal-500 text-white px-8 py-3 rounded-xl font-bold shadow-sm hover:shadow-md transition-colors cursor-pointer';
+                            actionBtn.disabled = false;
+                        } else {
+                            actionBtn.className = 'bg-gray-200 text-gray-400 px-8 py-3 rounded-xl font-bold cursor-not-allowed transition-colors';
+                            actionBtn.disabled = true;
+                        }
+                    };
+                    optionsContainer.appendChild(input);
+                } else {
+                    optionsContainer.className = 'grid grid-cols-1 md:grid-cols-2 gap-4 mb-8';
+                    q.options.forEach((opt, index) => {
+                        const btn = document.createElement('div');
+                        btn.className = 'p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-gray-700';
+                        btn.textContent = opt;
+                        btn.onclick = () => selectOption(btn, index);
+                        optionsContainer.appendChild(btn);
+                    });
+                }
+            }
+
+            function selectOption(btnElement, index) {
+                // Remove selected state from all
+                const options = document.getElementById('quiz-options').children;
+                for(let opt of options) {
+                    opt.className = 'p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-gray-700';
+                }
+                // Add selected state
+                btnElement.className = 'p-4 border-2 border-teal-500 bg-teal-50 rounded-xl cursor-pointer font-bold text-teal-700 shadow-sm';
+                selectedOption = index;
+                
+                // Enable submit button
+                const actionBtn = document.getElementById('quiz-action-btn');
+                actionBtn.className = 'bg-teal-500 text-white px-8 py-3 rounded-xl font-bold shadow-sm hover:shadow-md transition-colors cursor-pointer';
+                actionBtn.disabled = false;
+            }
+
+            function checkAnswer() {
+                const q = mockQuestions[currentQIndex];
+                const options = document.getElementById('quiz-options').children;
+                const actionBtn = document.getElementById('quiz-action-btn');
+                
+                let isCorrect = false;
+
+                if (q.type === 'fitb') {
+                    const input = options[0];
+                    input.disabled = true;
+                    if (selectedOption.toLowerCase() === q.answerText.toLowerCase()) {
+                        isCorrect = true;
+                        input.className = 'p-4 border-2 border-green-500 bg-green-50 rounded-xl text-green-700 text-lg w-full';
+                    } else {
+                        input.className = 'p-4 border-2 border-red-500 bg-red-50 rounded-xl text-red-700 text-lg w-full';
+                        const correctAns = document.createElement('div');
+                        correctAns.className = 'text-green-600 font-bold mt-2';
+                        correctAns.textContent = `Correct answer: ${q.answerText}`;
+                        document.getElementById('quiz-options').appendChild(correctAns);
+                    }
+                } else {
+                    for(let opt of options) { opt.onclick = null; opt.classList.remove('cursor-pointer', 'hover:border-teal-300', 'hover:bg-teal-50'); }
+                    
+                    if (selectedOption === q.answer) {
+                        isCorrect = true;
+                        options[selectedOption].className = 'p-4 border-2 border-green-500 bg-green-50 rounded-xl font-bold text-green-700 relative';
+                        options[selectedOption].innerHTML += '<i class="fas fa-check-circle absolute right-4 top-1/2 transform -translate-y-1/2 text-green-500 text-xl"></i>';
+                    } else {
+                        options[selectedOption].className = 'p-4 border-2 border-red-500 bg-red-50 rounded-xl font-bold text-red-700 relative';
+                        options[selectedOption].innerHTML += '<i class="fas fa-times-circle absolute right-4 top-1/2 transform -translate-y-1/2 text-red-500 text-xl"></i>';
+                        
+                        options[q.answer].className = 'p-4 border-2 border-green-500 bg-green-50 rounded-xl font-bold text-green-700 relative';
+                        options[q.answer].innerHTML += '<i class="fas fa-check-circle absolute right-4 top-1/2 transform -translate-y-1/2 text-green-500 text-xl"></i>';
+                    }
+                }
+                
+                if (isCorrect) {
+                    score++;
+                    if (window.isMistakePractice && dashboardState.mistakes) {
+                        dashboardState.mistakes = dashboardState.mistakes.filter(m => m.q !== q.q);
+                        window.saveData();
+                    }
+                } else {
+                    if (!dashboardState.mistakes) dashboardState.mistakes = [];
+                    let existing = dashboardState.mistakes.find(m => m.q === q.q);
+                    if (existing) {
+                        existing.count = (existing.count || 1) + 1;
+                    } else {
+                        dashboardState.mistakes.push({
+                            q: q.q,
+                            type: q.type,
+                            options: q.options,
+                            answer: q.answer,
+                            answerText: q.answerText,
+                            course: currentQuizCourse,
+                            count: 1
+                        });
+                    }
+                    window.saveData();
+                }
+
+                currentQIndex++;
+                if (currentQIndex < mockQuestions.length) {
+                    actionBtn.textContent = translations[currentLang].next_question || 'Next Question';
+                    actionBtn.className = 'bg-blue-500 text-white px-8 py-3 rounded-xl font-bold shadow-sm hover:bg-blue-600 transition-colors cursor-pointer';
+                    actionBtn.onclick = loadQuestion;
+                } else {
+                    actionBtn.textContent = translations[currentLang].finish_quiz || 'Finish Quiz';
+                    actionBtn.className = 'bg-gradient-to-r from-blue-400 to-teal-400 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:scale-105 transition-all cursor-pointer';
+                    actionBtn.onclick = finishQuiz;
+                }
+            }
+
+            function finishQuiz() {
+                endTime = Date.now();
+                exerciseQuiz.classList.add('hidden');
+                exerciseResults.classList.remove('hidden');
+                
+                const finishMessages = {
+                    en: `You got ${score} out of ${mockQuestions.length} correct.`,
+                    vi: `Bạn đã trả lời đúng ${score} trên ${mockQuestions.length} câu.`,
+                    fr: `Vous avez eu ${score} bonnes réponses sur ${mockQuestions.length}.`
+                };
+                document.getElementById('quiz-score-text').textContent = finishMessages[currentLang] || finishMessages.en;
+            }
+
+            // dashboardState is declared at top
+
+            document.getElementById('finish-quiz-btn')?.addEventListener('click', () => {
+                // Record History
+                if (currentQuizCourse && courseData[currentQuizCourse]) {
+                    const now = new Date();
+                    const dateStr = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                    if(!courseData[currentQuizCourse].history) courseData[currentQuizCourse].history = [];
+                    courseData[currentQuizCourse].history.push({
+                        date: dateStr,
+                        score: score,
+                        total: mockQuestions.length
+                    });
+                }
+
+                // Update Dashboard Stats dynamically
+                dashboardState.completedQuizzes = (dashboardState.completedQuizzes || 0) + 1;
+                dashboardState.totalScore = (dashboardState.totalScore || 0) + score;
+                dashboardState.totalQuestions = (dashboardState.totalQuestions || 0) + mockQuestions.length;
+                window.saveData();
+                
+                renderDashboardStats();
+                if (typeof renderAnalyticsMistakes === 'function') renderAnalyticsMistakes();
+                
+                const timeText = document.getElementById('stat-time-text');
+                if (timeText) {
+                    timeText.classList.add('text-green-500'); 
+                    setTimeout(() => timeText.classList.remove('text-green-500'), 2000);
+                }
+                
+                // 4. Update Radar Chart
+                if (window.updateRadarStats) {
+                    const bump = (score / mockQuestions.length) * 0.15;
+                    dashboardState.radarStats = dashboardState.radarStats.map(v => Math.min(1.0, v + Math.random()*bump));
+                    window.updateRadarStats(dashboardState.radarStats);
+                }
+
+                showToast('Dashboard stats updated dynamically!');
+                
+                if (window.isMistakePractice) {
+                    switchToView('analytics-view');
+                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer');
+                    const analyticsLink = document.querySelector('a[data-target="analytics-view"]');
+                    if(analyticsLink) analyticsLink.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors';
+                } else {
+                    switchToView('dashboard-view');
+                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer');
+                    const dashLink = document.querySelector('a[data-target="dashboard-view"]');
+                    if(dashLink) dashLink.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors';
+                }
+            });
+
+        });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+﻿Dự án: Thống Kê Học Tập. Mục tiêu: Cá nhân hóa lộ trình cho sinh viên năm nhất, giảm áp lực, hỗ trợ tự học (self-paced learning). Công nghệ: Python, Go, NLP và thuật toán thích ứng.
