@@ -584,9 +584,15 @@
     </div>
 
     <!-- 4. Floating Action Element (Chat Widget) -->
-    <div class="fixed bottom-4 right-4 left-4 md:left-auto md:bottom-6 md:right-6 w-[calc(100%-2rem)] md:w-[320px] glass-card rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-mint flex flex-col overflow-hidden z-50 transition-all">
+    <!-- FAB Button -->
+    <button id="chat-fab" class="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-blue-400 text-white flex items-center justify-center shadow-[0_10px_20px_-10px_rgba(0,0,0,0.3)] hover:scale-105 transition-transform z-[60] focus:outline-none border-2 border-mint/30">
+        <i class="fas fa-robot text-2xl"></i>
+    </button>
+
+    <!-- Chat Window -->
+    <div id="chat-widget" class="fixed bottom-20 right-4 left-4 md:left-auto md:bottom-24 md:right-6 w-[calc(100%-2rem)] md:w-[320px] glass-card rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-mint flex flex-col overflow-hidden z-50 transition-all origin-bottom-right scale-0 opacity-0 pointer-events-none">
         <!-- Chat Header -->
-        <div class="bg-gradient-to-r from-blue-500 to-blue-400 p-4 flex items-center justify-between text-white cursor-pointer hover:from-blue-600 hover:to-blue-500 transition-colors">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-400 p-4 flex items-center justify-between text-white border-b border-mint/20">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full glass-card/20 flex items-center justify-center">
                     <i class="fas fa-robot text-sm"></i>
@@ -596,7 +602,7 @@
                     <p class="text-[10px] text-blue-100">Online</p>
                 </div>
             </div>
-            <i class="fas fa-chevron-down text-blue-100 hover:text-white"></i>
+            <button id="chat-close-btn" class="focus:outline-none hover:bg-white/20 p-1 rounded transition-colors"><i class="fas fa-times text-blue-100 hover:text-white"></i></button>
         </div>
         
         <!-- Chat Body -->
@@ -1272,22 +1278,32 @@
             const input = document.getElementById('chat-input');
             const sendBtn = document.getElementById('send-btn');
             const chatBody = document.getElementById('chat-body');
-            const chatHeader = document.querySelector('.bg-gradient-to-r.from-blue-500.to-blue-400');
-            const chatWidget = chatHeader.parentElement;
+            const chatWidget = document.getElementById('chat-widget');
+            const chatFab = document.getElementById('chat-fab');
+            const chatCloseBtn = document.getElementById('chat-close-btn');
 
-            // Toggle chat minimization
-            chatHeader.addEventListener('click', () => {
-                const isMinimized = chatWidget.classList.contains('translate-y-[calc(100%-60px)]');
-                const chevron = chatHeader.querySelector('.fa-chevron-down, .fa-chevron-up');
-                
-                if (isMinimized) {
-                    chatWidget.classList.remove('translate-y-[calc(100%-60px)]');
-                    chevron.classList.replace('fa-chevron-up', 'fa-chevron-down');
+            // Open chat by default on desktop
+            if (window.innerWidth >= 768) {
+                chatWidget.classList.remove('scale-0', 'opacity-0', 'pointer-events-none');
+                chatWidget.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+                chatFab.innerHTML = '<i class="fas fa-times text-2xl"></i>';
+            }
+
+            function toggleChat() {
+                const isClosed = chatWidget.classList.contains('scale-0');
+                if (isClosed) {
+                    chatWidget.classList.remove('scale-0', 'opacity-0', 'pointer-events-none');
+                    chatWidget.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+                    chatFab.innerHTML = '<i class="fas fa-times text-2xl"></i>';
                 } else {
-                    chatWidget.classList.add('translate-y-[calc(100%-60px)]');
-                    chevron.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                    chatWidget.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
+                    chatWidget.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+                    chatFab.innerHTML = '<i class="fas fa-robot text-2xl"></i>';
                 }
-            });
+            }
+
+            if(chatFab) chatFab.addEventListener('click', toggleChat);
+            if(chatCloseBtn) chatCloseBtn.addEventListener('click', toggleChat);
 
             let chatHistory = [];
 
