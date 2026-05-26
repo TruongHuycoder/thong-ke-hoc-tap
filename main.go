@@ -15,14 +15,30 @@ import (
 
 var openaiClient *openai.Client
 var systemPrompt string
-const groqModel = "llama-3.3-70b-versatile"
+var aiModel string
 
 func init() {
 	godotenv.Load()
-	apiKey := "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"
+	
+	var apiKey string
+	var baseURL string
+
+	if xaiKey := os.Getenv("XAI_API_KEY"); xaiKey != "" {
+		apiKey = xaiKey
+		baseURL = "https://api.x.ai/v1"
+		aiModel = "grok-beta"
+	} else if groqKey := os.Getenv("GROQ_API_KEY"); groqKey != "" {
+		apiKey = groqKey
+		baseURL = "https://api.groq.com/openai/v1"
+		aiModel = "llama-3.3-70b-versatile"
+	} else {
+		apiKey = "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"
+		baseURL = "https://api.groq.com/openai/v1"
+		aiModel = "llama-3.3-70b-versatile"
+	}
 
 	config := openai.DefaultConfig(apiKey)
-	config.BaseURL = "https://api.groq.com/openai/v1"
+	config.BaseURL = baseURL
 	openaiClient = openai.NewClientWithConfig(config)
 
 	knowledge, _ := os.ReadFile("knowledge.txt")
@@ -73,7 +89,7 @@ func handleChat(w http.ResponseWriter, r *http.Request) {
 	stream, err := openaiClient.CreateChatCompletionStream(
 		r.Context(),
 		openai.ChatCompletionRequest{
-			Model:    groqModel,
+			Model:    aiModel,
 			Messages: messages,
 			Stream:   true,
 		},
@@ -148,7 +164,7 @@ Văn bản: %s`, req.NumQuestions, text)
 	resp, err := openaiClient.CreateChatCompletion(
 		r.Context(),
 		openai.ChatCompletionRequest{
-			Model: groqModel,
+			Model: aiModel,
 			Messages: []openai.ChatCompletionMessage{
 				{Role: openai.ChatMessageRoleUser, Content: prompt},
 			},
