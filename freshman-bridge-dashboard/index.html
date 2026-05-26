@@ -242,29 +242,62 @@
             <!-- Row 3: Path Optimization (1 Wide Card) -->
             <div class="glass-card rounded-2xl p-6  border border-mint mb-8">
                 <h2 class="text-lg font-bold text-white mb-6">Optimal Learning Path</h2>
-                
-                <div class="w-full h-[220px] text-teal-400 relative">
+                             <div class="w-full h-[220px] text-teal-400 relative">
                     <svg viewBox="0 0 800 220" class="w-full h-full" preserveAspectRatio="none">
                         <defs>
-                            <linearGradient id="optGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="currentColor" stop-opacity="0.25"/>
-                                <stop offset="100%" stop-color="currentColor" stop-opacity="0.05"/>
+                            <linearGradient id="optGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.3">
+                                    <animate attributeName="stop-opacity" values="0.3;0.5;0.3" dur="3s" repeatCount="indefinite"/>
+                                </stop>
+                                <stop offset="100%" stop-color="#0d9488" stop-opacity="0.05">
+                                    <animate attributeName="stop-opacity" values="0.05;0.15;0.05" dur="3s" repeatCount="indefinite"/>
+                                </stop>
                             </linearGradient>
+                            <linearGradient id="lineGlow" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#5eead4"/>
+                                <stop offset="50%" stop-color="#14b8a6"/>
+                                <stop offset="100%" stop-color="#0d9488"/>
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="blur"/>
+                                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
                         </defs>
                         
-                        <!-- Area path representing the Optimal Zone -->
-                        <path d="M0,220 L0,180 Q400,120 800,40 L800,220 Z" fill="url(#optGrad)" />
-                        <!-- Top edge of the Optimal Zone -->
-                        <path d="M0,180 Q400,120 800,40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                        <!-- Bottom edge representing bottom of optimal zone -->
-                        <path d="M0,220 Q400,160 800,80" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6 6" stroke-opacity="0.5"/>
+                        <!-- Animated breathing area -->
+                        <path d="M0,220 L0,180 Q400,120 800,40 L800,220 Z" fill="url(#optGrad)">
+                            <animate attributeName="d" values="M0,220 L0,180 Q400,120 800,40 L800,220 Z;M0,220 L0,175 Q400,115 800,35 L800,220 Z;M0,220 L0,185 Q400,125 800,45 L800,220 Z;M0,220 L0,180 Q400,120 800,40 L800,220 Z" dur="4s" repeatCount="indefinite"/>
+                        </path>
+                        
+                        <!-- Glowing top edge -->
+                        <path d="M0,180 Q400,120 800,40" fill="none" stroke="url(#lineGlow)" stroke-width="3" stroke-linecap="round" filter="url(#glow)">
+                            <animate attributeName="d" values="M0,180 Q400,120 800,40;M0,175 Q400,115 800,35;M0,185 Q400,125 800,45;M0,180 Q400,120 800,40" dur="4s" repeatCount="indefinite"/>
+                        </path>
+                        
+                        <!-- Animated dashed bottom edge -->
+                        <path d="M0,220 Q400,160 800,80" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6 6" stroke-opacity="0.5">
+                            <animate attributeName="stroke-dashoffset" values="0;24" dur="2s" repeatCount="indefinite"/>
+                        </path>
+                        
+                        <!-- Moving glowing dot tracer -->
+                        <circle r="5" fill="#5eead4" filter="url(#glow)">
+                            <animateMotion dur="5s" repeatCount="indefinite" path="M0,180 Q400,120 800,40"/>
+                        </circle>
+                        <circle r="8" fill="#5eead4" opacity="0.3">
+                            <animateMotion dur="5s" repeatCount="indefinite" path="M0,180 Q400,120 800,40"/>
+                            <animate attributeName="r" values="8;14;8" dur="1.5s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.3;0.1;0.3" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
                         
                         <!-- Axis Labels -->
                         <text x="10" y="20" class="text-xs fill-gray-400 font-medium">Difficulty</text>
                         <text x="720" y="210" class="text-xs fill-gray-400 font-medium">Student Skill</text>
                         
-                        <!-- Label inside chart -->
-                        <text x="400" y="145" text-anchor="middle" class="text-xs font-bold fill-teal-500 tracking-wider" transform="rotate(-10, 400, 145)">OPTIMAL ZONE</text>
+                        <!-- Pulsing OPTIMAL ZONE label -->
+                        <text x="400" y="145" text-anchor="middle" class="text-xs font-bold tracking-wider" fill="#5eead4" transform="rotate(-10, 400, 145)" filter="url(#glow)">
+                            OPTIMAL ZONE
+                            <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+                        </text>
                     </svg>
                 </div>
                 
