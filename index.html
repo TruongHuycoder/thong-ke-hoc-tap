@@ -15,35 +15,76 @@
     <script>window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #131b2f;
+            background-image: 
+                linear-gradient(rgba(118, 199, 183, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(118, 199, 183, 0.07) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: #ffffff;
+        }
+        .glass-card {
+            background: rgba(19, 27, 47, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(118, 199, 183, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .btn-3d {
+            background: #76c7b7 !important;
+            color: #131b2f !important;
+            border-radius: 12px;
+            box-shadow: 0 6px 0 #4a9d8d, 0 10px 15px rgba(0,0,0,0.3) !important;
+            transition: all 0.1s !important;
+            font-weight: 700 !important;
+            border: none !important;
+        }
+        .btn-3d:active {
+            transform: translateY(6px) !important;
+            box-shadow: 0 0px 0 #4a9d8d, 0 2px 5px rgba(0,0,0,0.3) !important;
+        }
+        .btn-3d:hover:not(:active) {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 0 #4a9d8d, 0 12px 18px rgba(0,0,0,0.4) !important;
+            filter: brightness(1.1);
+        }
+        .text-mint { color: #76c7b7 !important; }
+        .border-mint { border-color: rgba(118, 199, 183, 0.3) !important; }
+        
+        /* Smooth scrollbars for dark mode */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(118, 199, 183, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(118, 199, 183, 0.5); }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="text-white">
     <div class="flex h-screen overflow-hidden">
         
         <!-- 1. Sidebar Navigation -->
-        <aside id="main-sidebar" class="w-64 bg-white border-r border-gray-100 flex flex-col p-6 shrink-0 h-full z-20 hidden">
+        <aside id="main-sidebar" class="w-64 glass-card border-r border-mint flex flex-col p-6 shrink-0 h-full z-20 hidden">
             <!-- Logo area -->
             <div class="flex items-center gap-3 mb-10">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-teal-400 shadow-sm"></div>
-                <span class="font-bold text-gray-800 text-lg tracking-tight">Freshman Analytics</span>
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-teal-400 "></div>
+                <span class="font-bold text-white text-lg tracking-tight">Freshman Analytics</span>
             </div>
             
             <!-- Navigation Links -->
             <nav class="flex flex-col gap-2">
-                <a href="#" data-target="dashboard-view" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors">
+                <a href="#" data-target="dashboard-view" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-mint font-medium transition-colors">
                     <i class="fas fa-home w-5"></i> <span data-i18n="nav_dashboard">Dashboard</span>
                 </a>
-                <a href="#" data-target="courses-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer">
+                <a href="#" data-target="courses-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-[rgba(118,199,183,0.1)] hover:text-white font-medium transition-colors cursor-pointer">
                     <i class="fas fa-book-open w-5"></i> <span data-i18n="nav_courses">Courses</span>
                 </a>
-                <a href="#" data-target="schedule-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer">
+                <a href="#" data-target="schedule-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-[rgba(118,199,183,0.1)] hover:text-white font-medium transition-colors cursor-pointer">
                     <i class="fas fa-calendar-alt w-5"></i> <span data-i18n="nav_schedule">Schedule</span>
                 </a>
-                <a href="#" data-target="analytics-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer">
+                <a href="#" data-target="analytics-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-[rgba(118,199,183,0.1)] hover:text-white font-medium transition-colors cursor-pointer">
                     <i class="fas fa-chart-line w-5"></i> <span data-i18n="nav_analytics">Analytics</span>
                 </a>
-                <a href="#" data-target="settings-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer">
+                <a href="#" data-target="settings-view" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-[rgba(118,199,183,0.1)] hover:text-white font-medium transition-colors cursor-pointer">
                     <i class="fas fa-cog w-5"></i> <span data-i18n="nav_settings">Settings</span>
                 </a>
                 <a href="#" id="logout-btn" class="flex items-center gap-3 px-4 py-3 mt-4 rounded-xl text-red-500 hover:bg-red-50 font-medium transition-colors cursor-pointer">
@@ -57,29 +98,29 @@
             <!-- 2. Top Header -->
             <header id="main-header" class="flex justify-between items-center mb-8 hidden">
                 <div>
-                    <h1 id="greeting-text" class="text-3xl font-bold text-gray-900">Good morning, Nam! 👋</h1>
-                    <p class="text-gray-500 mt-1">Today is a great day to learn something new.</p>
+                    <h1 id="greeting-text" class="text-3xl font-bold text-white">Good morning, Nam! 👋</h1>
+                    <p class="text-gray-300 mt-1">Today is a great day to learn something new.</p>
                 </div>
                 <div class="flex items-center gap-6">
                     <!-- Notifications -->
                     <div class="relative">
                         <div id="notification-bell" class="relative cursor-pointer hover:scale-105 transition-transform">
-                            <i class="fas fa-bell text-gray-400 text-xl"></i>
+                            <i class="fas fa-bell text-gray-300 text-xl"></i>
                             <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
                         </div>
                         <!-- Notification Dropdown -->
-                        <div id="notification-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white border border-gray-100 rounded-2xl shadow-lg z-50 p-4">
-                            <h3 class="font-bold text-gray-800 mb-2 border-b pb-2" data-i18n="notifications">Notifications</h3>
-                            <div class="text-sm text-gray-600">
-                                <p class="mb-1"><span class="font-bold text-teal-500" data-i18n="system">System</span> • <span data-i18n="just_now">Just now</span></p>
+                        <div id="notification-dropdown" class="hidden absolute right-0 mt-3 w-80 glass-card border border-mint rounded-2xl shadow-lg z-50 p-4">
+                            <h3 class="font-bold text-white mb-2 border-b pb-2" data-i18n="notifications">Notifications</h3>
+                            <div class="text-sm text-gray-300">
+                                <p class="mb-1"><span class="font-bold text-mint" data-i18n="system">System</span> • <span data-i18n="just_now">Just now</span></p>
                                 <p data-i18n="notification_welcome">Welcome to Freshman Analytics! We're excited to have you here. This platform is designed to help you analyze your study statistics and optimize your learning journey. Start maximizing your efficiency today!</p>
                             </div>
                         </div>
                     </div>
-                    <button id="add-material-btn" class="bg-teal-400 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm hover:shadow-md hover:scale-105 transition-all cursor-pointer" data-i18n="add_material">
+                    <button id="add-material-btn" class="btn-3d px-5 py-2.5 rounded-xl font-semibold  hover: hover:scale-105 transition-all cursor-pointer" data-i18n="add_material">
                         + Add Material
                     </button>
-                    <div id="profile-avatar-btn" class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border-2 border-white shadow-sm cursor-pointer hover:scale-105 transition-transform">
+                    <div id="profile-avatar-btn" class="w-10 h-10 rounded-full bg-[rgba(118,199,183,0.2)] flex items-center justify-center text-mint font-bold border-2 border-white  cursor-pointer hover:scale-105 transition-transform">
                         <img id="avatar-img" src="" alt="Avatar" class="w-full h-full rounded-full hidden object-cover">
                         <span id="avatar-initials">NA</span>
                     </div>
@@ -90,50 +131,50 @@
             <div id="views-container">
                 <!-- Login View -->
                 <div id="login-view" class="view-section">
-                    <div class="max-w-md mx-auto mt-20 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                    <div class="max-w-md mx-auto mt-20 glass-card rounded-2xl p-8  border border-mint">
                         <div class="text-center mb-8">
-                            <div class="w-16 h-16 bg-teal-100 text-teal-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+                            <div class="w-16 h-16 bg-teal-100 text-mint rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
                                 <i class="fas fa-graduation-cap"></i>
                             </div>
-                            <h2 class="text-2xl font-bold text-gray-800">Welcome Back!</h2>
-                            <p class="text-gray-500 mt-2">Log in to sync your study progress</p>
+                            <h2 class="text-2xl font-bold text-white">Welcome Back!</h2>
+                            <p class="text-gray-300 mt-2">Log in to sync your study progress</p>
                         </div>
                         <div class="flex flex-col gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                <input type="text" id="login-username" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-teal-400 focus:outline-none transition-colors" placeholder="Enter username">
+                                <label class="block text-sm font-medium text-gray-200 mb-1">Username</label>
+                                <input type="text" id="login-username" class="w-full p-3 border-2 border-mint rounded-xl focus:border-teal-400 focus:outline-none transition-colors" placeholder="Enter username">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                <input type="password" id="login-password" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-teal-400 focus:outline-none transition-colors" placeholder="Enter password">
+                                <label class="block text-sm font-medium text-gray-200 mb-1">Password</label>
+                                <input type="password" id="login-password" class="w-full p-3 border-2 border-mint rounded-xl focus:border-teal-400 focus:outline-none transition-colors" placeholder="Enter password">
                             </div>
-                            <button id="login-submit-btn" class="w-full bg-teal-500 text-white font-bold py-3 rounded-xl mt-4 hover:bg-teal-600 transition-colors shadow-sm">Log In</button>
-                            <p class="text-center text-sm text-gray-500 mt-4">Don't have an account? <span id="go-to-register" class="text-teal-500 font-bold cursor-pointer hover:underline">Sign up</span></p>
+                            <button id="login-submit-btn" class="w-full btn-3d text-white font-bold py-3 rounded-xl mt-4 hover:bg-teal-600 transition-colors ">Log In</button>
+                            <p class="text-center text-sm text-gray-300 mt-4">Don't have an account? <span id="go-to-register" class="text-mint font-bold cursor-pointer hover:underline">Sign up</span></p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Register View -->
                 <div id="register-view" class="view-section hidden">
-                    <div class="max-w-md mx-auto mt-20 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                    <div class="max-w-md mx-auto mt-20 glass-card rounded-2xl p-8  border border-mint">
                         <div class="text-center mb-8">
-                            <div class="w-16 h-16 bg-blue-100 text-blue-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+                            <div class="w-16 h-16 bg-[rgba(118,199,183,0.2)] text-mint rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
                                 <i class="fas fa-user-plus"></i>
                             </div>
-                            <h2 class="text-2xl font-bold text-gray-800">Create Account</h2>
-                            <p class="text-gray-500 mt-2">Start your learning journey today</p>
+                            <h2 class="text-2xl font-bold text-white">Create Account</h2>
+                            <p class="text-gray-300 mt-2">Start your learning journey today</p>
                         </div>
                         <div class="flex flex-col gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                <input type="text" id="register-username" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-blue-400 focus:outline-none transition-colors" placeholder="Choose a username">
+                                <label class="block text-sm font-medium text-gray-200 mb-1">Username</label>
+                                <input type="text" id="register-username" class="w-full p-3 border-2 border-mint rounded-xl focus:border-blue-400 focus:outline-none transition-colors" placeholder="Choose a username">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                <input type="password" id="register-password" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-blue-400 focus:outline-none transition-colors" placeholder="Create a password">
+                                <label class="block text-sm font-medium text-gray-200 mb-1">Password</label>
+                                <input type="password" id="register-password" class="w-full p-3 border-2 border-mint rounded-xl focus:border-blue-400 focus:outline-none transition-colors" placeholder="Create a password">
                             </div>
-                            <button id="register-submit-btn" class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl mt-4 hover:bg-blue-600 transition-colors shadow-sm">Sign Up</button>
-                            <p class="text-center text-sm text-gray-500 mt-4">Already have an account? <span id="go-to-login" class="text-blue-500 font-bold cursor-pointer hover:underline">Log in</span></p>
+                            <button id="register-submit-btn" class="w-full btn-3d text-white font-bold py-3 rounded-xl mt-4 hover:bg-blue-600 transition-colors ">Sign Up</button>
+                            <p class="text-center text-sm text-gray-300 mt-4">Already have an account? <span id="go-to-login" class="text-mint font-bold cursor-pointer hover:underline">Log in</span></p>
                         </div>
                     </div>
                 </div>
@@ -143,55 +184,55 @@
                     <!-- Row 1: Quick Stats (3 Cards) -->
             <div class="grid grid-cols-3 gap-6 mb-6">
                 <!-- Card 1: Completion Rate -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition-shadow">
+                <div class="glass-card rounded-2xl p-6  border border-mint flex flex-col items-center justify-center hover: transition-shadow">
                     <div class="relative w-20 h-20 mb-3">
                         <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="40" fill="none" stroke="#f3f4f6" stroke-width="8" />
                             <circle id="stat-completion-circle" cx="50" cy="50" r="40" fill="none" stroke="#2dd4bf" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="62.8" stroke-linecap="round" class="transition-all duration-1000" />
                         </svg>
-                        <div id="stat-completion-text" class="absolute inset-0 flex items-center justify-center font-bold text-xl text-gray-800">75%</div>
+                        <div id="stat-completion-text" class="absolute inset-0 flex items-center justify-center font-bold text-xl text-white">75%</div>
                     </div>
-                    <h3 class="text-gray-500 font-medium" data-i18n="completion_rate">Completion Rate</h3>
+                    <h3 class="text-gray-300 font-medium" data-i18n="completion_rate">Completion Rate</h3>
                 </div>
                 <!-- Card 2: On-Time Rate -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition-shadow">
+                <div class="glass-card rounded-2xl p-6  border border-mint flex flex-col items-center justify-center hover: transition-shadow">
                     <div class="relative w-20 h-20 mb-3">
                         <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="40" fill="none" stroke="#f3f4f6" stroke-width="8" />
                             <circle id="stat-ontime-circle" cx="50" cy="50" r="40" fill="none" stroke="#60a5fa" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="25.12" stroke-linecap="round" class="transition-all duration-1000" />
                         </svg>
-                        <div id="stat-ontime-text" class="absolute inset-0 flex items-center justify-center font-bold text-xl text-gray-800">90%</div>
+                        <div id="stat-ontime-text" class="absolute inset-0 flex items-center justify-center font-bold text-xl text-white">90%</div>
                     </div>
-                    <h3 class="text-gray-500 font-medium" data-i18n="ontime_rate">On-Time Rate</h3>
+                    <h3 class="text-gray-300 font-medium" data-i18n="ontime_rate">On-Time Rate</h3>
                 </div>
                 <!-- Card 3: Avg. Completion Time -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition-shadow">
+                <div class="glass-card rounded-2xl p-6  border border-mint flex flex-col items-center justify-center hover: transition-shadow">
                     <div class="w-20 h-20 flex items-center justify-center mb-3 text-teal-400">
                         <i class="far fa-clock text-5xl"></i>
                     </div>
-                    <div id="stat-time-text" class="font-bold text-3xl text-gray-800 mb-1">1.5 hrs</div>
-                    <h3 class="text-gray-500 font-medium" data-i18n="avg_time">Avg. Completion Time</h3>
+                    <div id="stat-time-text" class="font-bold text-3xl text-white mb-1">1.5 hrs</div>
+                    <h3 class="text-gray-300 font-medium" data-i18n="avg_time">Avg. Completion Time</h3>
                 </div>
             </div>
 
             <!-- Row 2: Action & Diagnosis (Full-width Micro-Tasks) -->
             <div class="mb-6">
                 <!-- Left Card - Today's Micro-Tasks -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
+                <div class="glass-card rounded-2xl p-6  border border-mint flex flex-col">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-lg font-bold text-gray-800">Today's Micro-Tasks</h2>
-                        <span class="text-sm font-medium text-gray-400">Goal: Macroeconomics</span>
+                        <h2 class="text-lg font-bold text-white">Today's Micro-Tasks</h2>
+                        <span class="text-sm font-medium text-gray-300">Goal: Macroeconomics</span>
                     </div>
                     <div id="micro-tasks-container" class="flex flex-col gap-3">
-                        <div class="task-item flex items-center p-4 rounded-xl border border-gray-100 bg-gray-50 opacity-75 cursor-pointer transition-colors">
-                            <div class="task-checkbox checked w-6 h-6 rounded-md bg-teal-400 text-white flex items-center justify-center mr-4 shrink-0 transition-all">
+                        <div class="task-item flex items-center p-4 rounded-xl border border-mint bg-transparent opacity-75 cursor-pointer transition-colors">
+                            <div class="task-checkbox checked w-6 h-6 rounded-md btn-3d flex items-center justify-center mr-4 shrink-0 transition-all">
                                 <i class="fas fa-check text-xs"></i>
                             </div>
-                            <div class="task-text flex-grow text-gray-400 line-through font-medium">Memorize 5 key definitions</div>
+                            <div class="task-text flex-grow text-gray-300 line-through font-medium">Memorize 5 key definitions</div>
                         </div>
-                        <div class="task-item flex items-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors shadow-sm">
+                        <div class="task-item flex items-center p-4 rounded-xl border border-mint glass-card hover:bg-transparent cursor-pointer transition-colors ">
                             <div class="task-checkbox w-6 h-6 rounded-md border-2 border-gray-300 mr-4 shrink-0 transition-all"></div>
-                            <div class="task-text flex-grow text-gray-800 font-medium">Complete 1 past exam paper under timed conditions</div>
+                            <div class="task-text flex-grow text-white font-medium">Complete 1 past exam paper under timed conditions</div>
                             <span class="bg-red-50 text-red-500 px-2.5 py-1 rounded-md text-xs font-bold tracking-wide ml-3 shrink-0">PRIORITY</span>
                         </div>
                     </div>
@@ -199,8 +240,8 @@
             </div>
 
             <!-- Row 3: Path Optimization (1 Wide Card) -->
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-                <h2 class="text-lg font-bold text-gray-800 mb-6">Optimal Learning Path</h2>
+            <div class="glass-card rounded-2xl p-6  border border-mint mb-8">
+                <h2 class="text-lg font-bold text-white mb-6">Optimal Learning Path</h2>
                 
                 <div class="w-full h-[220px] text-teal-400 relative">
                     <svg viewBox="0 0 800 220" class="w-full h-full" preserveAspectRatio="none">
@@ -231,15 +272,15 @@
                 <div class="flex justify-center gap-6 mt-6">
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 rounded-sm bg-yellow-400"></div>
-                        <span class="text-sm text-gray-600 font-medium">Stress</span>
+                        <span class="text-sm text-gray-300 font-medium">Stress</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 rounded-sm bg-teal-400"></div>
-                        <span class="text-sm text-gray-600 font-medium">Optimal</span>
+                        <span class="text-sm text-gray-300 font-medium">Optimal</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 rounded-sm bg-gray-300"></div>
-                        <span class="text-sm text-gray-600 font-medium">Boredom</span>
+                        <span class="text-sm text-gray-300 font-medium">Boredom</span>
                     </div>
                 </div>
             </div>
@@ -249,30 +290,30 @@
             
             <!-- Add Material View -->
             <div id="add-material-view" class="view-section hidden">
-                <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center min-h-[300px] border-dashed border-2 border-teal-200 hover:bg-teal-50 transition-colors cursor-pointer" id="drop-zone">
+                <div class="glass-card rounded-2xl p-8  border border-mint flex flex-col items-center justify-center min-h-[300px] border-dashed border-2 border-teal-200 hover:bg-teal-50 transition-colors cursor-pointer" id="drop-zone">
                     <i class="fas fa-cloud-upload-alt text-5xl text-teal-400 mb-4"></i>
-                    <h2 class="text-xl font-bold text-gray-800 mb-2" data-i18n="upload_title">Upload Materials</h2>
-                    <p class="text-gray-500 text-center max-w-md" data-i18n="upload_desc">Drag and drop your documents, PDFs, or files here, or click to browse. We'll automatically create compatible lessons.</p>
+                    <h2 class="text-xl font-bold text-white mb-2" data-i18n="upload_title">Upload Materials</h2>
+                    <p class="text-gray-300 text-center max-w-md" data-i18n="upload_desc">Drag and drop your documents, PDFs, or files here, or click to browse. We'll automatically create compatible lessons.</p>
                     <input type="file" id="file-upload" class="hidden" accept=".pdf,.doc,.docx,.txt">
                     <div id="upload-progress" class="w-full max-w-md mt-6 hidden">
-                        <div class="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-2 w-full bg-[rgba(118,199,183,0.15)] rounded-full overflow-hidden">
                             <div id="upload-bar" class="h-full bg-teal-400 w-0 transition-all duration-300"></div>
                         </div>
-                        <p class="text-sm text-gray-500 mt-2 text-center" data-i18n="processing">Processing and creating lessons...</p>
+                        <p class="text-sm text-gray-300 mt-2 text-center" data-i18n="processing">Processing and creating lessons...</p>
                     </div>
                 </div>
             </div>
 
             <!-- Courses View -->
             <div id="courses-view" class="view-section hidden">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6" data-i18n="my_courses">My Courses</h2>
+                <h2 class="text-2xl font-bold text-white mb-6" data-i18n="my_courses">My Courses</h2>
                 <div id="courses-grid" class="grid grid-cols-3 gap-6">
                     <!-- Default course card -->
-                    <div class="course-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-transform hover:scale-105 cursor-pointer">
-                        <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-book"></i></div>
-                        <h3 class="font-bold text-gray-800 mb-2" data-i18n="course_macro">Macroeconomics 101</h3>
-                        <p class="text-sm text-gray-500 mb-4" data-i18n="course_macro_desc">Dr. Smith • 12 Lessons</p>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5"><div class="bg-blue-500 h-1.5 rounded-full" style="width: 45%"></div></div>
+                    <div class="course-card glass-card rounded-2xl p-6  border border-mint transition-transform hover:scale-105 cursor-pointer">
+                        <div class="w-12 h-12 bg-[rgba(118,199,183,0.2)] text-mint rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-book"></i></div>
+                        <h3 class="font-bold text-white mb-2" data-i18n="course_macro">Macroeconomics 101</h3>
+                        <p class="text-sm text-gray-300 mb-4" data-i18n="course_macro_desc">Dr. Smith • 12 Lessons</p>
+                        <div class="w-full bg-[rgba(118,199,183,0.15)] rounded-full h-1.5"><div class="btn-3d h-1.5 rounded-full" style="width: 45%"></div></div>
                     </div>
                 </div>
             </div>
@@ -280,10 +321,10 @@
             <!-- Course Detail View -->
             <div id="course-detail-view" class="view-section hidden">
                 <div class="flex items-center justify-between mb-6">
-                    <button id="back-to-courses-from-detail" class="text-gray-500 hover:text-gray-800 transition-colors flex items-center gap-2">
+                    <button id="back-to-courses-from-detail" class="text-gray-300 hover:text-white transition-colors flex items-center gap-2">
                         <i class="fas fa-arrow-left"></i> Back to Courses
                     </button>
-                    <h2 id="detail-course-title" class="text-xl font-bold text-gray-800">Course Details</h2>
+                    <h2 id="detail-course-title" class="text-xl font-bold text-white">Course Details</h2>
                     <button id="detail-delete-course-btn" class="bg-red-50 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors border border-red-100 flex items-center gap-2">
                         <i class="fas fa-trash-alt"></i> Xóa khóa học
                     </button>
@@ -292,29 +333,29 @@
                 <div class="grid grid-cols-3 gap-6">
                     <!-- Left: Generation & Start -->
                     <div class="col-span-2 flex flex-col gap-6">
-                        <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-4">Ready to practice?</h3>
-                            <button id="detail-start-quiz-btn" class="bg-gradient-to-r from-blue-400 to-teal-400 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg hover:scale-105 transition-all text-lg w-full max-w-sm mb-6">
+                        <div class="glass-card rounded-2xl p-8  border border-mint flex flex-col items-center justify-center">
+                            <h3 class="text-2xl font-bold text-white mb-4">Ready to practice?</h3>
+                            <button id="detail-start-quiz-btn" class="btn-3d px-8 py-3 rounded-xl font-bold  hover:shadow-lg hover:scale-105 transition-all text-lg w-full max-w-sm mb-6">
                                 Luyện tập nhanh (3 câu)
                             </button>
-                            <div class="w-full h-px bg-gray-100 mb-6"></div>
-                            <h4 class="text-md font-bold text-gray-600 mb-2">Tạo số lượng câu hỏi mong muốn</h4>
-                            <p class="text-sm text-gray-500 text-center mb-4">Nhập số lượng câu hỏi và hệ thống AI sẽ tạo đề thi rồi bắt đầu bài học ngay lập tức.</p>
+                            <div class="w-full h-px bg-[rgba(118,199,183,0.1)] mb-6"></div>
+                            <h4 class="text-md font-bold text-gray-300 mb-2">Tạo số lượng câu hỏi mong muốn</h4>
+                            <p class="text-sm text-gray-300 text-center mb-4">Nhập số lượng câu hỏi và hệ thống AI sẽ tạo đề thi rồi bắt đầu bài học ngay lập tức.</p>
                             <div class="flex gap-4 items-center w-full max-w-sm">
-                                <input type="number" id="detail-num-questions" min="1" max="100" value="5" class="p-3 border-2 border-gray-200 rounded-xl focus:border-teal-500 focus:outline-none text-lg w-24 text-center">
-                                <button id="detail-generate-btn" class="flex-1 bg-teal-500 text-white px-4 py-3 rounded-xl font-bold shadow-sm hover:shadow-md transition-colors cursor-pointer">
+                                <input type="number" id="detail-num-questions" min="1" max="100" value="5" class="p-3 border-2 border-mint rounded-xl focus:border-teal-500 focus:outline-none text-lg w-24 text-center">
+                                <button id="detail-generate-btn" class="flex-1 bg-teal-500 text-white px-4 py-3 rounded-xl font-bold  hover: transition-colors cursor-pointer">
                                     Tạo & Bắt đầu
                                 </button>
                             </div>
-                            <div id="detail-generating-indicator" class="hidden mt-4 text-teal-600 font-medium animate-pulse flex items-center gap-2">
+                            <div id="detail-generating-indicator" class="hidden mt-4 text-mint font-medium animate-pulse flex items-center gap-2">
                                 <i class="fas fa-spinner fa-spin"></i> Generating... this may take a while.
                             </div>
                         </div>
                     </div>
 
                     <!-- Right: History -->
-                    <div class="col-span-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 h-[400px] flex flex-col">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fas fa-history text-teal-500 mr-2"></i> Quiz History</h3>
+                    <div class="col-span-1 glass-card rounded-2xl p-6  border border-mint h-[400px] flex flex-col">
+                        <h3 class="text-lg font-bold text-white mb-4"><i class="fas fa-history text-mint mr-2"></i> Quiz History</h3>
                         <div id="detail-history-list" class="flex-1 overflow-y-auto flex flex-col gap-3">
                             <!-- History items go here -->
                         </div>
@@ -325,54 +366,54 @@
             <!-- Exercise View -->
             <div id="exercise-view" class="view-section hidden">
                 <div class="flex items-center justify-between mb-6">
-                    <button id="back-to-courses" class="text-gray-500 hover:text-gray-800 transition-colors flex items-center gap-2">
+                    <button id="back-to-courses" class="text-gray-300 hover:text-white transition-colors flex items-center gap-2">
                         <i class="fas fa-arrow-left"></i> Back to Courses
                     </button>
-                    <h2 id="exercise-title" class="text-xl font-bold text-gray-800">AI Generated Exercises</h2>
+                    <h2 id="exercise-title" class="text-xl font-bold text-white">AI Generated Exercises</h2>
                     <div class="w-24"></div> <!-- Spacer for center alignment -->
                 </div>
 
                 <!-- Loading State -->
-                <div id="exercise-loading" class="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 flex flex-col items-center justify-center min-h-[400px]">
-                    <i class="fas fa-robot text-5xl text-blue-500 mb-6 animate-bounce"></i>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Analyzing Document...</h3>
-                    <p class="text-gray-500 text-center max-w-md">Our AI is reading your material and generating custom questions to test your knowledge.</p>
-                    <div class="w-48 bg-gray-200 rounded-full h-2 mt-6 overflow-hidden">
-                        <div class="bg-blue-500 h-2 rounded-full w-full animate-pulse"></div>
+                <div id="exercise-loading" class="glass-card rounded-2xl p-12  border border-mint flex flex-col items-center justify-center min-h-[400px]">
+                    <i class="fas fa-robot text-5xl text-mint mb-6 animate-bounce"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Analyzing Document...</h3>
+                    <p class="text-gray-300 text-center max-w-md">Our AI is reading your material and generating custom questions to test your knowledge.</p>
+                    <div class="w-48 bg-[rgba(118,199,183,0.15)] rounded-full h-2 mt-6 overflow-hidden">
+                        <div class="btn-3d h-2 rounded-full w-full animate-pulse"></div>
                     </div>
                 </div>
 
                 <!-- Quiz Interface -->
-                <div id="exercise-quiz" class="hidden bg-white rounded-2xl p-8 shadow-sm border border-gray-100 min-h-[400px] flex flex-col">
+                <div id="exercise-quiz" class="hidden glass-card rounded-2xl p-8  border border-mint min-h-[400px] flex flex-col">
                     <div class="flex justify-between items-center mb-8">
-                        <span class="text-sm font-bold text-teal-500 uppercase tracking-wider" id="quiz-progress-text">Question 1 of 3</span>
+                        <span class="text-sm font-bold text-mint uppercase tracking-wider" id="quiz-progress-text">Question 1 of 3</span>
                         <div class="flex gap-2" id="quiz-progress-dots">
                             <!-- dots generated dynamically -->
                         </div>
                     </div>
                     
-                    <h3 class="text-2xl font-bold text-gray-800 mb-8" id="quiz-question">Loading question...</h3>
+                    <h3 class="text-2xl font-bold text-white mb-8" id="quiz-question">Loading question...</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8" id="quiz-options">
                         <!-- options generated dynamically -->
                     </div>
 
                     <div class="mt-auto flex justify-end">
-                        <button id="quiz-action-btn" class="bg-gray-200 text-gray-400 px-8 py-3 rounded-xl font-bold cursor-not-allowed transition-colors" disabled>
+                        <button id="quiz-action-btn" class="bg-[rgba(118,199,183,0.15)] text-gray-300 px-8 py-3 rounded-xl font-bold cursor-not-allowed transition-colors" disabled>
                             Submit Answer
                         </button>
                     </div>
                 </div>
 
                 <!-- Quiz Results -->
-                <div id="exercise-results" class="hidden bg-white rounded-2xl p-12 shadow-sm border border-gray-100 flex flex-col items-center justify-center min-h-[400px]">
+                <div id="exercise-results" class="hidden glass-card rounded-2xl p-12  border border-mint flex flex-col items-center justify-center min-h-[400px]">
                     <div class="w-24 h-24 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-6 text-4xl">
                         <i class="fas fa-trophy"></i>
                     </div>
-                    <h3 class="text-3xl font-bold text-gray-800 mb-2">Quiz Complete!</h3>
-                    <p class="text-gray-500 mb-8 text-center" id="quiz-score-text">You got 3 out of 3 correct.</p>
+                    <h3 class="text-3xl font-bold text-white mb-2">Quiz Complete!</h3>
+                    <p class="text-gray-300 mb-8 text-center" id="quiz-score-text">You got 3 out of 3 correct.</p>
                     
-                    <button id="finish-quiz-btn" class="bg-gradient-to-r from-blue-400 to-teal-400 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:shadow-lg hover:scale-105 transition-all">
+                    <button id="finish-quiz-btn" class="btn-3d px-8 py-3 rounded-xl font-bold  hover:shadow-lg hover:scale-105 transition-all">
                         Update Dashboard & Return
                     </button>
                 </div>
@@ -381,10 +422,10 @@
             <!-- Schedule View -->
             <div id="schedule-view" class="view-section hidden">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800" data-i18n="my_schedule">Lịch trình học (May 2026)</h2>
+                    <h2 class="text-2xl font-bold text-white" data-i18n="my_schedule">Lịch trình học (May 2026)</h2>
                     <div class="flex gap-2">
-                        <button class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-600 transition-colors"><i class="fas fa-chevron-left"></i></button>
-                        <button class="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 text-gray-600 transition-colors"><i class="fas fa-chevron-right"></i></button>
+                        <button class="w-10 h-10 rounded-xl border border-mint flex items-center justify-center hover:bg-transparent text-gray-300 transition-colors"><i class="fas fa-chevron-left"></i></button>
+                        <button class="w-10 h-10 rounded-xl border border-mint flex items-center justify-center hover:bg-transparent text-gray-300 transition-colors"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
 
@@ -394,9 +435,9 @@
                 </div>
 
                 <!-- Timeline -->
-                <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 relative">
+                <div class="glass-card rounded-3xl p-6  border border-mint relative">
                     <!-- Vertical Line -->
-                    <div class="absolute left-10 top-8 bottom-8 w-px bg-gray-200"></div>
+                    <div class="absolute left-10 top-8 bottom-8 w-px bg-[rgba(118,199,183,0.15)]"></div>
                     
                     <div id="schedule-timeline" class="flex flex-col gap-6">
                         <!-- Timeline items will be generated dynamically -->
@@ -408,21 +449,21 @@
             <div id="analytics-view" class="view-section hidden">
                 <div class="flex justify-between items-end mb-6">
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-800" data-i18n="detailed_analytics">Phân tích quá trình học</h2>
-                        <p class="text-gray-500 mt-1">Khám phá điểm mạnh và những phần cần cải thiện</p>
+                        <h2 class="text-2xl font-bold text-white" data-i18n="detailed_analytics">Phân tích quá trình học</h2>
+                        <p class="text-gray-300 mt-1">Khám phá điểm mạnh và những phần cần cải thiện</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
                     <!-- Mistakes / Need Improvement -->
-                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-shadow">
+                    <div class="glass-card rounded-3xl p-6  border border-mint flex flex-col hover: transition-shadow">
                         <div class="flex items-center gap-3 mb-6">
-                            <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-500 flex items-center justify-center text-2xl shadow-sm border border-orange-200">
+                            <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-500 flex items-center justify-center text-2xl  border border-orange-200">
                                 <i class="fas fa-chart-line transform -scale-x-100"></i>
                             </div>
                             <div>
-                                <h3 class="text-lg font-bold text-gray-800">Điểm sai cần khắc phục</h3>
-                                <p class="text-sm text-gray-500">Luyện tập lại để tăng sự ghi nhớ</p>
+                                <h3 class="text-lg font-bold text-white">Điểm sai cần khắc phục</h3>
+                                <p class="text-sm text-gray-300">Luyện tập lại để tăng sự ghi nhớ</p>
                             </div>
                         </div>
                         
@@ -432,12 +473,12 @@
                     </div>
 
                     <!-- Strengths -->
-                    <div class="bg-gradient-to-br from-teal-500 to-blue-600 rounded-3xl p-6 shadow-md text-white flex flex-col relative overflow-hidden hover:shadow-lg transition-shadow border border-teal-400">
+                    <div class="bg-gradient-to-br from-teal-500 to-blue-600 rounded-3xl p-6  text-white flex flex-col relative overflow-hidden hover:shadow-lg transition-shadow border border-teal-400">
                         <!-- Decorative bg -->
                         <i class="fas fa-award absolute -right-6 -bottom-6 text-[140px] text-white opacity-10"></i>
                         
                         <div class="flex items-center gap-3 mb-6 relative z-10">
-                            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl shadow-inner border border-white/30 backdrop-blur-md">
+                            <div class="w-12 h-12 rounded-xl glass-card/20 flex items-center justify-center text-2xl shadow-inner border border-white/30 backdrop-blur-md">
                                 <i class="fas fa-star text-yellow-300"></i>
                             </div>
                             <div>
@@ -446,7 +487,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-white/10 rounded-2xl p-1 backdrop-blur-md flex-1 relative z-10 border border-white/20 shadow-inner">
+                        <div class="glass-card/10 rounded-2xl p-1 backdrop-blur-md flex-1 relative z-10 border border-white/20 shadow-inner">
                             <table class="w-full text-left border-collapse">
                                 <thead>
                                     <tr>
@@ -456,34 +497,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="hover:bg-white/10 transition-colors group">
+                                    <tr class="hover:glass-card/10 transition-colors group">
                                         <td class="p-4 border-b border-white/10">
                                             <p class="font-bold text-lg mb-0.5 group-hover:text-yellow-200 transition-colors">Cung và Cầu</p>
                                             <p class="text-xs text-teal-100 font-medium">Macroeconomics 101</p>
                                         </td>
                                         <td class="p-4 border-b border-white/10 text-center font-bold text-lg">95%</td>
                                         <td class="p-4 border-b border-white/10 text-right">
-                                            <span class="bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">Xuất sắc</span>
+                                            <span class="bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-lg ">Xuất sắc</span>
                                         </td>
                                     </tr>
-                                    <tr class="hover:bg-white/10 transition-colors group">
+                                    <tr class="hover:glass-card/10 transition-colors group">
                                         <td class="p-4 border-b border-white/10">
                                             <p class="font-bold text-lg mb-0.5 group-hover:text-yellow-200 transition-colors">Động từ hành động</p>
                                             <p class="text-xs text-teal-100 font-medium">3000 Từ Vựng</p>
                                         </td>
                                         <td class="p-4 border-b border-white/10 text-center font-bold text-lg">100%</td>
                                         <td class="p-4 border-b border-white/10 text-right">
-                                            <span class="bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">Hoàn hảo</span>
+                                            <span class="bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-lg ">Hoàn hảo</span>
                                         </td>
                                     </tr>
-                                    <tr class="hover:bg-white/10 transition-colors group">
+                                    <tr class="hover:glass-card/10 transition-colors group">
                                         <td class="p-4">
                                             <p class="font-bold text-lg mb-0.5 group-hover:text-green-200 transition-colors">Giới hạn hàm số</p>
                                             <p class="text-xs text-teal-100 font-medium">Toán Cao Cấp</p>
                                         </td>
                                         <td class="p-4 text-center font-bold text-lg">88%</td>
                                         <td class="p-4 text-right">
-                                            <span class="bg-gradient-to-r from-green-300 to-emerald-400 text-green-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">Rất tốt</span>
+                                            <span class="bg-gradient-to-r from-green-300 to-emerald-400 text-green-900 text-xs font-bold px-3 py-1.5 rounded-lg ">Rất tốt</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -495,12 +536,12 @@
 
             <!-- Settings View -->
             <div id="settings-view" class="view-section hidden">
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 max-w-2xl">
-                    <h2 class="text-xl font-bold text-gray-800 mb-6" data-i18n="account_settings">Account Settings</h2>
+                <div class="glass-card rounded-2xl p-6  border border-mint max-w-2xl">
+                    <h2 class="text-xl font-bold text-white mb-6" data-i18n="account_settings">Account Settings</h2>
                     
                     <!-- Avatar Upload -->
                     <div class="mb-8 flex items-center gap-6">
-                        <div class="relative w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border-4 border-white shadow-md group">
+                        <div class="relative w-24 h-24 rounded-full bg-[rgba(118,199,183,0.2)] flex items-center justify-center text-mint font-bold border-4 border-white  group">
                             <img id="settings-avatar-img" src="" alt="Avatar" class="w-full h-full rounded-full hidden object-cover">
                             <span id="settings-avatar-initials" class="text-2xl">NA</span>
                             <div class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" id="avatar-upload-trigger">
@@ -509,15 +550,15 @@
                             <input type="file" id="avatar-input" class="hidden" accept="image/*">
                         </div>
                         <div>
-                            <h3 class="font-bold text-gray-800" data-i18n="profile_picture">Profile Picture</h3>
-                            <p class="text-sm text-gray-500" data-i18n="profile_picture_desc">Click the camera icon to upload a new avatar.</p>
+                            <h3 class="font-bold text-white" data-i18n="profile_picture">Profile Picture</h3>
+                            <p class="text-sm text-gray-300" data-i18n="profile_picture_desc">Click the camera icon to upload a new avatar.</p>
                         </div>
                     </div>
 
                     <!-- Language Selection -->
                     <div class="mb-4">
-                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="language_pref">Language Preference</label>
-                        <select id="language-select" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400">
+                        <label class="block text-sm font-bold text-gray-200 mb-2" data-i18n="language_pref">Language Preference</label>
+                        <select id="language-select" class="w-full border border-mint rounded-xl px-4 py-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-400">
                             <option value="en">English</option>
                             <option value="vi">Tiếng Việt (Vietnamese)</option>
                             <option value="fr">Français (French)</option>
@@ -533,11 +574,11 @@
     </div>
 
     <!-- 4. Floating Action Element (Chat Widget) -->
-    <div class="fixed bottom-6 right-6 w-[320px] bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-gray-100 flex flex-col overflow-hidden z-50 transition-all">
+    <div class="fixed bottom-6 right-6 w-[320px] glass-card rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-mint flex flex-col overflow-hidden z-50 transition-all">
         <!-- Chat Header -->
         <div class="bg-gradient-to-r from-blue-500 to-blue-400 p-4 flex items-center justify-between text-white cursor-pointer hover:from-blue-600 hover:to-blue-500 transition-colors">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                <div class="w-8 h-8 rounded-full glass-card/20 flex items-center justify-center">
                     <i class="fas fa-robot text-sm"></i>
                 </div>
                 <div>
@@ -549,16 +590,16 @@
         </div>
         
         <!-- Chat Body -->
-        <div id="chat-body" class="p-4 bg-gray-50 h-64 overflow-y-auto flex flex-col gap-3">
-            <div class="bg-white border border-gray-100 rounded-2xl rounded-tl-sm p-3 shadow-sm text-sm text-gray-700 w-11/12 self-start leading-relaxed">
+        <div id="chat-body" class="p-4 bg-transparent h-64 overflow-y-auto flex flex-col gap-3">
+            <div class="glass-card border border-mint rounded-2xl rounded-tl-sm p-3  text-sm text-gray-200 w-11/12 self-start leading-relaxed">
                 Hi Nam! I analyzed your new materials. Ready to tackle Elasticity?
             </div>
         </div>
         
         <!-- Chat Input -->
-        <div class="p-3 border-t border-gray-100 bg-white flex items-center gap-2">
-            <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all">
-            <button id="send-btn" class="w-9 h-9 rounded-xl bg-blue-500 text-white flex items-center justify-center hover:bg-blue-600 shadow-sm transition-colors shrink-0">
+        <div class="p-3 border-t border-mint glass-card flex items-center gap-2">
+            <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 bg-transparent border border-mint rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all">
+            <button id="send-btn" class="w-9 h-9 rounded-xl btn-3d text-white flex items-center justify-center hover:bg-blue-600  transition-colors shrink-0">
                 <i class="fas fa-paper-plane text-xs relative -ml-0.5 mt-0.5"></i>
             </button>
         </div>
@@ -630,12 +671,12 @@
                 // Add default course if it's not in courseData to avoid duplication
                 if (!courseData["Macroeconomics 101"] && !courseData["Kinh tế vĩ mô 101"]) {
                     const defaultCard = document.createElement('div');
-                    defaultCard.className = 'course-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-transform hover:scale-105 cursor-pointer';
+                    defaultCard.className = 'course-card glass-card rounded-2xl p-6  border border-mint transition-transform hover:scale-105 cursor-pointer';
                     defaultCard.innerHTML = `
-                        <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-book"></i></div>
-                        <h3 class="font-bold text-gray-800 mb-2" data-i18n="course_macro">Macroeconomics 101</h3>
-                        <p class="text-sm text-gray-500 mb-4" data-i18n="course_macro_desc">Dr. Smith • 12 Lessons</p>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5"><div class="bg-blue-500 h-1.5 rounded-full" style="width: 45%"></div></div>
+                        <div class="w-12 h-12 bg-[rgba(118,199,183,0.2)] text-mint rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-book"></i></div>
+                        <h3 class="font-bold text-white mb-2" data-i18n="course_macro">Macroeconomics 101</h3>
+                        <p class="text-sm text-gray-300 mb-4" data-i18n="course_macro_desc">Dr. Smith • 12 Lessons</p>
+                        <div class="w-full bg-[rgba(118,199,183,0.15)] rounded-full h-1.5"><div class="btn-3d h-1.5 rounded-full" style="width: 45%"></div></div>
                     `;
                     defaultCard.addEventListener('click', () => {
                         const title = defaultCard.querySelector('h3').textContent;
@@ -646,15 +687,15 @@
 
                 for (const [fileName, course] of Object.entries(courseData)) {
                     const newCard = document.createElement('div');
-                    newCard.className = 'course-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-transform hover:scale-105 cursor-pointer border-t-4 border-t-teal-400 relative group';
+                    newCard.className = 'course-card glass-card rounded-2xl p-6  border border-mint transition-transform hover:scale-105 cursor-pointer border-t-4 border-t-teal-400 relative group';
                     newCard.innerHTML = `
-                        <button class="absolute top-4 right-4 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg hover:bg-red-50" title="Delete course" onclick="event.stopPropagation(); window.deleteCourse('${fileName}');">
+                        <button class="absolute top-4 right-4 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg hover:bg-red-50" title="Delete course" onclick="event.stopPropagation(); window.deleteCourse('${fileName}');">
                             <i class="fas fa-trash-alt"></i>
                         </button>
-                        <div class="w-12 h-12 bg-teal-100 text-teal-500 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-file-alt"></i></div>
-                        <h3 class="font-bold text-gray-800 mb-2">${fileName}</h3>
-                        <p class="text-sm text-gray-500 mb-4">Saved • AI Generated</p>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5"><div class="bg-teal-500 h-1.5 rounded-full" style="width: 100%"></div></div>
+                        <div class="w-12 h-12 bg-teal-100 text-mint rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-file-alt"></i></div>
+                        <h3 class="font-bold text-white mb-2">${fileName}</h3>
+                        <p class="text-sm text-gray-300 mb-4">Saved • AI Generated</p>
+                        <div class="w-full bg-[rgba(118,199,183,0.15)] rounded-full h-1.5"><div class="bg-teal-500 h-1.5 rounded-full" style="width: 100%"></div></div>
                     `;
                     newCard.addEventListener('click', () => {
                         if(typeof window.openCourseDetail === 'function') window.openCourseDetail(fileName);
@@ -728,14 +769,14 @@
                     
                     const el = document.createElement('div');
                     if (isSelected) {
-                        el.className = 'flex flex-col items-center justify-center min-w-[70px] h-20 rounded-2xl bg-gradient-to-b from-teal-400 to-teal-500 text-white cursor-pointer shadow-md transform scale-105 transition-transform flex-shrink-0';
+                        el.className = 'flex flex-col items-center justify-center min-w-[70px] h-20 rounded-2xl bg-gradient-to-b from-teal-400 to-teal-500 text-white cursor-pointer  transform scale-105 transition-transform flex-shrink-0';
                     } else {
-                        el.className = 'flex flex-col items-center justify-center min-w-[70px] h-20 rounded-2xl border border-gray-100 bg-white text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm flex-shrink-0';
+                        el.className = 'flex flex-col items-center justify-center min-w-[70px] h-20 rounded-2xl border border-mint glass-card text-gray-300 cursor-pointer hover:bg-transparent transition-colors  flex-shrink-0';
                     }
                     
                     el.innerHTML = `
                         <span class="text-xs font-bold uppercase mb-1">${dayName}</span>
-                        <span class="text-xl font-bold ${isSelected ? '' : 'text-gray-800'}">${dateNum}</span>
+                        <span class="text-xl font-bold ${isSelected ? '' : 'text-white'}">${dateNum}</span>
                     `;
                     
                     el.onclick = () => {
@@ -755,7 +796,7 @@
                 
                 const allCourses = Object.keys(courseData);
                 if (allCourses.length === 0) {
-                    timeline.innerHTML = '<div class="text-center text-gray-500 italic py-8">No courses available. Please add material first.</div>';
+                    timeline.innerHTML = '<div class="text-center text-gray-300 italic py-8">No courses available. Please add material first.</div>';
                     return;
                 }
                 
@@ -763,9 +804,9 @@
                 const shuffled = [...allCourses].sort((a, b) => (a.length + daySeed) % 3 - (b.length + daySeed) % 3);
                 
                 const slots = [
-                    { time: '08:00', period: 'AM', label: 'Sự tập trung cao', type: 'advanced', dotClass: 'bg-teal-400', cardClass: 'from-teal-50 to-emerald-50 border-teal-100', labelClass: 'bg-teal-100 text-teal-600', textClass: 'text-teal-700', btnClass: 'text-teal-600 border-teal-200 hover:bg-teal-50', duration: '1h 30m', icon: 'book-open' },
+                    { time: '08:00', period: 'AM', label: 'Sự tập trung cao', type: 'advanced', dotClass: 'bg-teal-400', cardClass: 'from-teal-50 to-emerald-50 border-teal-100', labelClass: 'bg-teal-100 text-mint', textClass: 'text-teal-700', btnClass: 'text-mint border-teal-200 hover:bg-teal-50', duration: '1h 30m', icon: 'book-open' },
                     { time: '02:00', period: 'PM', label: 'Thực hành', type: 'moderate', dotClass: 'bg-purple-400', cardClass: 'from-purple-50 to-pink-50 border-purple-100', labelClass: 'bg-purple-100 text-purple-600', textClass: 'text-purple-700', btnClass: 'text-purple-600 border-purple-200 hover:bg-purple-50', duration: '45m', icon: 'calculator' },
-                    { time: '08:00', period: 'PM', label: 'Ôn tập nhẹ nhàng', type: 'light', dotClass: 'bg-blue-400', cardClass: 'from-blue-50 to-indigo-50 border-blue-100', labelClass: 'bg-blue-100 text-blue-600', textClass: 'text-blue-700', btnClass: 'text-blue-600 border-blue-200 hover:bg-blue-50', duration: '1h 00m', icon: 'language' }
+                    { time: '08:00', period: 'PM', label: 'Ôn tập nhẹ nhàng', type: 'light', dotClass: 'bg-blue-400', cardClass: 'from-blue-50 to-indigo-50 border-blue-100', labelClass: 'bg-[rgba(118,199,183,0.2)] text-mint', textClass: 'text-blue-700', btnClass: 'text-mint border-blue-200 hover:bg-blue-50', duration: '1h 00m', icon: 'language' }
                 ];
                 
                 let html = '';
@@ -776,18 +817,18 @@
                     html += `
                         <div class="flex gap-6 relative z-10">
                             <div class="w-16 text-right shrink-0 pt-1">
-                                <p class="text-sm font-bold text-gray-800">${slot.time}</p>
-                                <p class="text-xs text-gray-400">${slot.period}</p>
+                                <p class="text-sm font-bold text-white">${slot.time}</p>
+                                <p class="text-xs text-gray-300">${slot.period}</p>
                             </div>
-                            <div class="w-4 h-4 rounded-full ${slot.dotClass} border-4 border-white shadow-sm mt-1.5 shrink-0 z-10 -ml-[25px]"></div>
-                            <div class="flex-1 bg-gradient-to-r ${slot.cardClass} rounded-2xl p-5 border hover:shadow-md transition-shadow">
+                            <div class="w-4 h-4 rounded-full ${slot.dotClass} border-4 border-white  mt-1.5 shrink-0 z-10 -ml-[25px]"></div>
+                            <div class="flex-1 bg-gradient-to-r ${slot.cardClass} rounded-2xl p-5 border hover: transition-shadow">
                                 <div class="flex justify-between items-start mb-2">
-                                    <span class="${slot.labelClass} text-xs font-bold px-3 py-1 rounded-lg shadow-sm">${slot.label}</span>
-                                    <span class="text-xs font-bold ${slot.labelClass.replace('bg-', 'text-')} bg-white rounded-lg px-3 py-1 shadow-sm"><i class="far fa-clock mr-1"></i> ${slot.duration}</span>
+                                    <span class="${slot.labelClass} text-xs font-bold px-3 py-1 rounded-lg ">${slot.label}</span>
+                                    <span class="text-xs font-bold ${slot.labelClass.replace('bg-', 'text-')} glass-card rounded-lg px-3 py-1 "><i class="far fa-clock mr-1"></i> ${slot.duration}</span>
                                 </div>
-                                <h3 class="font-bold text-gray-800 text-lg mb-1">${courseName}</h3>
+                                <h3 class="font-bold text-white text-lg mb-1">${courseName}</h3>
                                 <p class="text-sm ${slot.textClass} font-medium mb-4"><i class="fas fa-${slot.icon} mr-1"></i> Daily Adaptive Session</p>
-                                <button onclick="window.startQuiz('${titleSafe}', '${slot.type}')" class="w-full py-2.5 bg-white ${slot.btnClass} border rounded-xl font-bold transition-colors shadow-sm">
+                                <button onclick="window.startQuiz('${titleSafe}', '${slot.type}')" class="w-full py-2.5 glass-card ${slot.btnClass} border rounded-xl font-bold transition-colors ">
                                     Start Lesson
                                 </button>
                             </div>
@@ -810,8 +851,8 @@
                             <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-3xl mb-4">
                                 <i class="fas fa-check"></i>
                             </div>
-                            <h4 class="font-bold text-gray-800 mb-1">Tuyệt vời!</h4>
-                            <p class="text-sm text-gray-500">Bạn chưa có lỗi sai nào cần khắc phục.</p>
+                            <h4 class="font-bold text-white mb-1">Tuyệt vời!</h4>
+                            <p class="text-sm text-gray-300">Bạn chưa có lỗi sai nào cần khắc phục.</p>
                         </div>
                     `;
                     return;
@@ -825,10 +866,10 @@
                     
                     el.innerHTML = `
                         <div class="flex-1 pr-4">
-                            <p class="font-bold text-gray-800 text-sm mb-1">${shortQ}</p>
+                            <p class="font-bold text-white text-sm mb-1">${shortQ}</p>
                             <p class="text-xs text-orange-600 font-medium"><i class="fas fa-times-circle mr-1"></i> ${mistake.course || 'Quiz'} • Sai ${mistake.count || 1} lần</p>
                         </div>
-                        <button class="shrink-0 bg-white border-2 border-orange-200 text-orange-500 font-bold px-4 py-2 rounded-xl group-hover:bg-gradient-to-r group-hover:from-orange-400 group-hover:to-red-500 group-hover:text-white group-hover:border-transparent transition-all shadow-sm" onclick="startMistakePractice('${mistake.q}')">
+                        <button class="shrink-0 glass-card border-2 border-orange-200 text-orange-500 font-bold px-4 py-2 rounded-xl group-hover:bg-gradient-to-r group-hover:from-orange-400 group-hover:to-red-500 group-hover:text-white group-hover:border-transparent transition-all " onclick="startMistakePractice('${mistake.q}')">
                             <i class="fas fa-redo-alt mr-1"></i> Luyện tập
                         </button>
                     `;
@@ -838,7 +879,7 @@
                 // Add a practice all button
                 if (dashboardState.mistakes.length > 1) {
                     const allBtn = document.createElement('button');
-                    allBtn.className = 'mt-2 w-full bg-gradient-to-r from-orange-400 to-red-500 text-white font-bold py-3 rounded-xl shadow-md hover:scale-105 transition-transform';
+                    allBtn.className = 'mt-2 w-full bg-gradient-to-r from-orange-400 to-red-500 text-white font-bold py-3 rounded-xl  hover:scale-105 transition-transform';
                     allBtn.innerHTML = '<i class="fas fa-dumbbell mr-2"></i> Ôn tập tất cả lỗi sai';
                     allBtn.onclick = () => startMistakePractice();
                     container.appendChild(allBtn);
@@ -1071,11 +1112,11 @@
                     
                     // Remove active state from all
                     navLinks.forEach(l => {
-                        l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer';
+                        l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-[rgba(118,199,183,0.1)] hover:text-white font-medium transition-colors cursor-pointer';
                     });
                     
                     // Add active state to clicked
-                    link.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors';
+                    link.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-mint font-medium transition-colors';
                     
                     // Handle View Switching
                     const targetId = link.getAttribute('data-target');
@@ -1112,16 +1153,16 @@
                     
                     const isChecked = cb.classList.toggle('checked');
                     if (isChecked) {
-                        cb.className = 'task-checkbox checked w-6 h-6 rounded-md bg-teal-400 text-white flex items-center justify-center mr-4 shrink-0 transition-all';
+                        cb.className = 'task-checkbox checked w-6 h-6 rounded-md btn-3d flex items-center justify-center mr-4 shrink-0 transition-all';
                         cb.innerHTML = '<i class="fas fa-check text-xs"></i>';
-                        text.className = 'task-text flex-grow text-gray-400 line-through font-medium';
-                        item.className = 'task-item flex items-center p-4 rounded-xl border border-gray-100 bg-gray-50 opacity-75 cursor-pointer transition-colors';
+                        text.className = 'task-text flex-grow text-gray-300 line-through font-medium';
+                        item.className = 'task-item flex items-center p-4 rounded-xl border border-mint bg-transparent opacity-75 cursor-pointer transition-colors';
                         showToast('Task completed!');
                     } else {
                         cb.className = 'task-checkbox w-6 h-6 rounded-md border-2 border-gray-300 mr-4 shrink-0 transition-all';
                         cb.innerHTML = '';
-                        text.className = 'task-text flex-grow text-gray-800 font-medium';
-                        item.className = 'task-item flex items-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors shadow-sm';
+                        text.className = 'task-text flex-grow text-white font-medium';
+                        item.className = 'task-item flex items-center p-4 rounded-xl border border-mint glass-card hover:bg-transparent cursor-pointer transition-colors ';
                     }
                 });
             });
@@ -1155,7 +1196,7 @@
 
                 // Create User message
                 const userMsg = document.createElement('div');
-                userMsg.className = 'bg-blue-500 text-white rounded-2xl rounded-tr-sm p-3 shadow-sm text-sm w-11/12 self-end leading-relaxed';
+                userMsg.className = 'btn-3d text-white rounded-2xl rounded-tr-sm p-3  text-sm w-11/12 self-end leading-relaxed';
                 userMsg.textContent = text;
                 chatBody.appendChild(userMsg);
 
@@ -1163,7 +1204,7 @@
                 chatBody.scrollTop = chatBody.scrollHeight;
 
                 const loadingMsg = document.createElement('div');
-                loadingMsg.className = 'bg-white border border-gray-100 rounded-2xl rounded-tl-sm p-3 shadow-sm text-sm text-gray-500 w-11/12 self-start italic';
+                loadingMsg.className = 'glass-card border border-mint rounded-2xl rounded-tl-sm p-3  text-sm text-gray-300 w-11/12 self-start italic';
                 loadingMsg.textContent = 'AI is typing...';
                 chatBody.appendChild(loadingMsg);
                 chatBody.scrollTop = chatBody.scrollHeight;
@@ -1179,7 +1220,7 @@
                     
                     loadingMsg.remove();
                     const botMsg = document.createElement('div');
-                    botMsg.className = 'bg-white border border-gray-100 rounded-2xl rounded-tl-sm p-3 shadow-sm text-sm text-gray-700 w-11/12 self-start leading-relaxed whitespace-pre-wrap';
+                    botMsg.className = 'glass-card border border-mint rounded-2xl rounded-tl-sm p-3  text-sm text-gray-200 w-11/12 self-start leading-relaxed whitespace-pre-wrap';
                     chatBody.appendChild(botMsg);
                     
                     if (!response.ok) {
@@ -1260,7 +1301,7 @@
                 addMaterialBtn.addEventListener('click', () => {
                     switchToView('add-material-view');
                     // Remove active state from sidebar links
-                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer');
+                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-[rgba(118,199,183,0.1)] hover:text-white font-medium transition-colors cursor-pointer');
                 });
             }
 
@@ -1375,12 +1416,12 @@
                                     window.saveData();
                                     
                                     const newCard = document.createElement('div');
-                                    newCard.className = 'course-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-transform hover:scale-105 cursor-pointer border-t-4 border-t-teal-400';
+                                    newCard.className = 'course-card glass-card rounded-2xl p-6  border border-mint transition-transform hover:scale-105 cursor-pointer border-t-4 border-t-teal-400';
                                     newCard.innerHTML = `
-                                        <div class="w-12 h-12 bg-teal-100 text-teal-500 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-file-alt"></i></div>
-                                        <h3 class="font-bold text-gray-800 mb-2">${fileName}</h3>
-                                        <p class="text-sm text-gray-500 mb-4" data-i18n="just_added">Just Added • AI Generated</p>
-                                        <div class="w-full bg-gray-200 rounded-full h-1.5"><div class="bg-teal-500 h-1.5 rounded-full" style="width: 100%"></div></div>
+                                        <div class="w-12 h-12 bg-teal-100 text-mint rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-file-alt"></i></div>
+                                        <h3 class="font-bold text-white mb-2">${fileName}</h3>
+                                        <p class="text-sm text-gray-300 mb-4" data-i18n="just_added">Just Added • AI Generated</p>
+                                        <div class="w-full bg-[rgba(118,199,183,0.15)] rounded-full h-1.5"><div class="bg-teal-500 h-1.5 rounded-full" style="width: 100%"></div></div>
                                     `;
                                     
                                     newCard.addEventListener('click', () => window.openCourseDetail(fileName));
@@ -1389,27 +1430,27 @@
                                     const tasksContainer = document.getElementById('micro-tasks-container');
                                     if (tasksContainer) {
                                         const newTask = document.createElement('div');
-                                        newTask.className = 'task-item flex items-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors shadow-sm';
+                                        newTask.className = 'task-item flex items-center p-4 rounded-xl border border-mint glass-card hover:bg-transparent cursor-pointer transition-colors ';
                                         newTask.innerHTML = `
                                             <div class="task-checkbox w-6 h-6 rounded-md border-2 border-gray-300 mr-4 shrink-0 transition-all"></div>
-                                            <div class="task-text flex-grow text-gray-800 font-medium">Review generated exercises for ${fileName}</div>
-                                            <span class="bg-blue-50 text-blue-500 px-2.5 py-1 rounded-md text-xs font-bold tracking-wide ml-3 shrink-0">NEW</span>
+                                            <div class="task-text flex-grow text-white font-medium">Review generated exercises for ${fileName}</div>
+                                            <span class="bg-blue-50 text-mint px-2.5 py-1 rounded-md text-xs font-bold tracking-wide ml-3 shrink-0">NEW</span>
                                         `;
                                         newTask.addEventListener('click', function() {
                                             const cb = this.querySelector('.task-checkbox');
                                             const text = this.querySelector('.task-text');
                                             const isChecked = cb.classList.toggle('checked');
                                             if (isChecked) {
-                                                cb.className = 'task-checkbox checked w-6 h-6 rounded-md bg-teal-400 text-white flex items-center justify-center mr-4 shrink-0 transition-all';
+                                                cb.className = 'task-checkbox checked w-6 h-6 rounded-md btn-3d flex items-center justify-center mr-4 shrink-0 transition-all';
                                                 cb.innerHTML = '<i class="fas fa-check text-xs"></i>';
-                                                text.className = 'task-text flex-grow text-gray-400 line-through font-medium';
-                                                this.className = 'task-item flex items-center p-4 rounded-xl border border-gray-100 bg-gray-50 opacity-75 cursor-pointer transition-colors';
+                                                text.className = 'task-text flex-grow text-gray-300 line-through font-medium';
+                                                this.className = 'task-item flex items-center p-4 rounded-xl border border-mint bg-transparent opacity-75 cursor-pointer transition-colors';
                                                 showToast('Task completed!');
                                             } else {
                                                 cb.className = 'task-checkbox w-6 h-6 rounded-md border-2 border-gray-300 mr-4 shrink-0 transition-all';
                                                 cb.innerHTML = '';
-                                                text.className = 'task-text flex-grow text-gray-800 font-medium';
-                                                this.className = 'task-item flex items-center p-4 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors shadow-sm';
+                                                text.className = 'task-text flex-grow text-white font-medium';
+                                                this.className = 'task-item flex items-center p-4 rounded-xl border border-mint glass-card hover:bg-transparent cursor-pointer transition-colors ';
                                             }
                                         });
                                         tasksContainer.prepend(newTask);
@@ -1435,9 +1476,9 @@
                 profileAvatarBtn.addEventListener('click', () => {
                     switchToView('settings-view');
                     // Update active nav link
-                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer');
+                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-[rgba(118,199,183,0.1)] hover:text-white font-medium transition-colors cursor-pointer');
                     const settingsLink = document.querySelector('a[data-target="settings-view"]');
-                    if(settingsLink) settingsLink.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors';
+                    if(settingsLink) settingsLink.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-mint font-medium transition-colors';
                 });
             }
 
@@ -1754,16 +1795,16 @@
                 historyList.innerHTML = '';
                 const history = courseData[courseName].history || [];
                 if (history.length === 0) {
-                    historyList.innerHTML = '<div class="text-sm text-gray-500 italic text-center mt-4">No quiz attempts yet.</div>';
+                    historyList.innerHTML = '<div class="text-sm text-gray-300 italic text-center mt-4">No quiz attempts yet.</div>';
                 } else {
                     history.forEach((h, idx) => {
                         historyList.innerHTML += `
-                            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 flex justify-between items-center">
+                            <div class="bg-transparent p-3 rounded-lg border border-mint flex justify-between items-center">
                                 <div>
-                                    <div class="text-sm font-bold text-gray-700">Attempt ${idx + 1}</div>
-                                    <div class="text-xs text-gray-500">${h.date}</div>
+                                    <div class="text-sm font-bold text-gray-200">Attempt ${idx + 1}</div>
+                                    <div class="text-xs text-gray-300">${h.date}</div>
                                 </div>
-                                <div class="text-teal-600 font-bold bg-teal-50 px-2 py-1 rounded-md text-sm">${h.score}/${h.total}</div>
+                                <div class="text-mint font-bold bg-teal-50 px-2 py-1 rounded-md text-sm">${h.score}/${h.total}</div>
                             </div>
                         `;
                     });
@@ -1852,7 +1893,7 @@
                 switchToView('exercise-view');
                 if (exerciseTitle) {
                     let diffLabel = difficulty === 'advanced' ? '🚀 Nâng cao' : (difficulty === 'light' ? '☕ Nhẹ nhàng' : '📚 Vừa vừa');
-                    exerciseTitle.innerHTML = `AI Quiz: ${title} <span class="text-sm ml-3 font-normal text-teal-600 bg-teal-50 px-2 py-1 rounded">${diffLabel}</span>`;
+                    exerciseTitle.innerHTML = `AI Quiz: ${title} <span class="text-sm ml-3 font-normal text-mint bg-teal-50 px-2 py-1 rounded">${diffLabel}</span>`;
                 }
                 currentQuizCourse = title;
                 
@@ -1914,7 +1955,7 @@
                 dotsContainer.innerHTML = '';
                 for(let i=0; i<mockQuestions.length; i++) {
                     const dot = document.createElement('div');
-                    dot.className = `w-2 h-2 rounded-full ${i === currentQIndex ? 'bg-teal-500' : (i < currentQIndex ? 'bg-teal-200' : 'bg-gray-200')}`;
+                    dot.className = `w-2 h-2 rounded-full ${i === currentQIndex ? 'bg-teal-500' : (i < currentQIndex ? 'bg-teal-200' : 'bg-[rgba(118,199,183,0.15)]')}`;
                     dotsContainer.appendChild(dot);
                 }
                 
@@ -1925,7 +1966,7 @@
                 
                 const actionBtn = document.getElementById('quiz-action-btn');
                 actionBtn.textContent = translations[currentLang].submit_answer || 'Submit Answer';
-                actionBtn.className = 'bg-gray-200 text-gray-400 px-8 py-3 rounded-xl font-bold cursor-not-allowed transition-colors';
+                actionBtn.className = 'bg-[rgba(118,199,183,0.15)] text-gray-300 px-8 py-3 rounded-xl font-bold cursor-not-allowed transition-colors';
                 actionBtn.disabled = true;
                 actionBtn.onclick = checkAnswer;
                 
@@ -1933,15 +1974,15 @@
                     optionsContainer.className = 'flex flex-col gap-4 mb-8';
                     const input = document.createElement('input');
                     input.type = 'text';
-                    input.className = 'p-4 border-2 border-gray-200 rounded-xl focus:border-teal-500 focus:outline-none text-lg w-full';
+                    input.className = 'p-4 border-2 border-mint rounded-xl focus:border-teal-500 focus:outline-none text-lg w-full';
                     input.placeholder = 'Type your answer here...';
                     input.oninput = (e) => {
                         selectedOption = e.target.value.trim();
                         if (selectedOption.length > 0) {
-                            actionBtn.className = 'bg-teal-500 text-white px-8 py-3 rounded-xl font-bold shadow-sm hover:shadow-md transition-colors cursor-pointer';
+                            actionBtn.className = 'bg-teal-500 text-white px-8 py-3 rounded-xl font-bold  hover: transition-colors cursor-pointer';
                             actionBtn.disabled = false;
                         } else {
-                            actionBtn.className = 'bg-gray-200 text-gray-400 px-8 py-3 rounded-xl font-bold cursor-not-allowed transition-colors';
+                            actionBtn.className = 'bg-[rgba(118,199,183,0.15)] text-gray-300 px-8 py-3 rounded-xl font-bold cursor-not-allowed transition-colors';
                             actionBtn.disabled = true;
                         }
                     };
@@ -1950,7 +1991,7 @@
                     optionsContainer.className = 'grid grid-cols-1 md:grid-cols-2 gap-4 mb-8';
                     q.options.forEach((opt, index) => {
                         const btn = document.createElement('div');
-                        btn.className = 'p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-gray-700';
+                        btn.className = 'p-4 border-2 border-mint rounded-xl cursor-pointer hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-gray-200';
                         btn.textContent = opt;
                         btn.onclick = () => selectOption(btn, index);
                         optionsContainer.appendChild(btn);
@@ -1962,15 +2003,15 @@
                 // Remove selected state from all
                 const options = document.getElementById('quiz-options').children;
                 for(let opt of options) {
-                    opt.className = 'p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-gray-700';
+                    opt.className = 'p-4 border-2 border-mint rounded-xl cursor-pointer hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-gray-200';
                 }
                 // Add selected state
-                btnElement.className = 'p-4 border-2 border-teal-500 bg-teal-50 rounded-xl cursor-pointer font-bold text-teal-700 shadow-sm';
+                btnElement.className = 'p-4 border-2 border-teal-500 bg-teal-50 rounded-xl cursor-pointer font-bold text-teal-700 ';
                 selectedOption = index;
                 
                 // Enable submit button
                 const actionBtn = document.getElementById('quiz-action-btn');
-                actionBtn.className = 'bg-teal-500 text-white px-8 py-3 rounded-xl font-bold shadow-sm hover:shadow-md transition-colors cursor-pointer';
+                actionBtn.className = 'bg-teal-500 text-white px-8 py-3 rounded-xl font-bold  hover: transition-colors cursor-pointer';
                 actionBtn.disabled = false;
             }
 
@@ -2038,11 +2079,11 @@
                 currentQIndex++;
                 if (currentQIndex < mockQuestions.length) {
                     actionBtn.textContent = translations[currentLang].next_question || 'Next Question';
-                    actionBtn.className = 'bg-blue-500 text-white px-8 py-3 rounded-xl font-bold shadow-sm hover:bg-blue-600 transition-colors cursor-pointer';
+                    actionBtn.className = 'btn-3d text-white px-8 py-3 rounded-xl font-bold  hover:bg-blue-600 transition-colors cursor-pointer';
                     actionBtn.onclick = loadQuestion;
                 } else {
                     actionBtn.textContent = translations[currentLang].finish_quiz || 'Finish Quiz';
-                    actionBtn.className = 'bg-gradient-to-r from-blue-400 to-teal-400 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:scale-105 transition-all cursor-pointer';
+                    actionBtn.className = 'btn-3d px-8 py-3 rounded-xl font-bold  hover:scale-105 transition-all cursor-pointer';
                     actionBtn.onclick = finishQuiz;
                 }
             }
@@ -2101,14 +2142,14 @@
                 
                 if (window.isMistakePractice) {
                     switchToView('analytics-view');
-                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer');
+                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-[rgba(118,199,183,0.1)] hover:text-white font-medium transition-colors cursor-pointer');
                     const analyticsLink = document.querySelector('a[data-target="analytics-view"]');
-                    if(analyticsLink) analyticsLink.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors';
+                    if(analyticsLink) analyticsLink.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-mint font-medium transition-colors';
                 } else {
                     switchToView('dashboard-view');
-                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 font-medium transition-colors cursor-pointer');
+                    navLinks.forEach(l => l.className = 'flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-[rgba(118,199,183,0.1)] hover:text-white font-medium transition-colors cursor-pointer');
                     const dashLink = document.querySelector('a[data-target="dashboard-view"]');
-                    if(dashLink) dashLink.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-teal-600 font-medium transition-colors';
+                    if(dashLink) dashLink.className = 'flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-50 text-mint font-medium transition-colors';
                 }
             });
 
