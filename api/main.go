@@ -193,8 +193,13 @@ func main() {
 	http.HandleFunc("/api/login", handleLogin)
 	http.HandleFunc("/api/data", handleData)
 
-	log.Println("Server is running on http://localhost:8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	
+	log.Printf("Server is running on port %s", port)
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
 }
