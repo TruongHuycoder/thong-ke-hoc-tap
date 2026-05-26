@@ -2090,7 +2090,16 @@
                 
                 if (isCorrect) {
                     score++;
-                    if (window.isMistakePractice && dashboardState.mistakes) {
+                    
+                // Show explanation if available
+                if (q.explanation) {
+                    const expDiv = document.createElement('div');
+                    expDiv.className = 'mt-6 p-4 bg-[rgba(30,58,138,0.4)] border border-blue-400/50 rounded-xl text-blue-100 text-sm animate-fade-in flex gap-3 backdrop-blur-sm';
+                    expDiv.innerHTML = '<div class="text-xl shrink-0">💡</div><div><div class="font-bold mb-1 text-blue-300">Giải thích chi tiết:</div>' + q.explanation + '</div>';
+                    document.getElementById('quiz-options').appendChild(expDiv);
+                }
+
+                if (window.isMistakePractice && dashboardState.mistakes) {
                         dashboardState.mistakes = dashboardState.mistakes.filter(m => m.q !== q.q);
                         window.saveData();
                     }

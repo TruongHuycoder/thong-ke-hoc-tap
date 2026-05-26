@@ -15,7 +15,7 @@ import (
 
 var openaiClient *openai.Client
 var systemPrompt string
-const groqModel = "llama3-70b-8192"
+const groqModel = "llama-3.3-70b-versatile"
 
 func init() {
 	godotenv.Load()
