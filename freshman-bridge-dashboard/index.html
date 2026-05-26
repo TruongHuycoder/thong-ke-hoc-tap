@@ -496,37 +496,7 @@
                                         <th class="p-4 text-sm font-bold text-teal-50 border-b border-white/20 text-right uppercase tracking-wider">Đánh giá</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr class="hover:glass-card/10 transition-colors group">
-                                        <td class="p-4 border-b border-white/10">
-                                            <p class="font-bold text-lg mb-0.5 group-hover:text-yellow-200 transition-colors">Cung và Cầu</p>
-                                            <p class="text-xs text-teal-100 font-medium">Macroeconomics 101</p>
-                                        </td>
-                                        <td class="p-4 border-b border-white/10 text-center font-bold text-lg">95%</td>
-                                        <td class="p-4 border-b border-white/10 text-right">
-                                            <span class="bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-lg ">Xuất sắc</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:glass-card/10 transition-colors group">
-                                        <td class="p-4 border-b border-white/10">
-                                            <p class="font-bold text-lg mb-0.5 group-hover:text-yellow-200 transition-colors">Động từ hành động</p>
-                                            <p class="text-xs text-teal-100 font-medium">3000 Từ Vựng</p>
-                                        </td>
-                                        <td class="p-4 border-b border-white/10 text-center font-bold text-lg">100%</td>
-                                        <td class="p-4 border-b border-white/10 text-right">
-                                            <span class="bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 text-xs font-bold px-3 py-1.5 rounded-lg ">Hoàn hảo</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:glass-card/10 transition-colors group">
-                                        <td class="p-4">
-                                            <p class="font-bold text-lg mb-0.5 group-hover:text-green-200 transition-colors">Giới hạn hàm số</p>
-                                            <p class="text-xs text-teal-100 font-medium">Toán Cao Cấp</p>
-                                        </td>
-                                        <td class="p-4 text-center font-bold text-lg">88%</td>
-                                        <td class="p-4 text-right">
-                                            <span class="bg-gradient-to-r from-green-300 to-emerald-400 text-green-900 text-xs font-bold px-3 py-1.5 rounded-lg ">Rất tốt</span>
-                                        </td>
-                                    </tr>
+                                <tbody id="analytics-strengths-list">
                                 </tbody>
                             </table>
                         </div>
@@ -839,6 +809,72 @@
             }
 
             window.isMistakePractice = false;
+
+            
+            function renderAnalyticsStrengths() {
+                const container = document.getElementById('analytics-strengths-list');
+                if (!container) return;
+                container.innerHTML = '';
+                
+                let courseStats = [];
+                for (let courseName in courseData) {
+                    if (courseData.hasOwnProperty(courseName)) {
+                        let history = courseData[courseName].history;
+                        if (history && history.length > 0) {
+                            let totalScore = 0;
+                            let totalQuestions = 0;
+                            history.forEach(h => {
+                                totalScore += h.score;
+                                totalQuestions += h.total;
+                            });
+                            if (totalQuestions > 0) {
+                                let accuracy = Math.round((totalScore / totalQuestions) * 100);
+                                courseStats.push({ name: courseName, accuracy: accuracy });
+                            }
+                        }
+                    }
+                }
+                
+                courseStats.sort((a, b) => b.accuracy - a.accuracy);
+                let topStats = courseStats.slice(0, 3);
+                
+                if (topStats.length === 0) {
+                    container.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-300 italic">Chưa có dữ liệu học tập. Hãy làm bài tập để ghi nhận thành tích!</td></tr>';
+                    return;
+                }
+                
+                topStats.forEach(stat => {
+                    let rating = "Tốt";
+                    let ratingClass = "from-green-300 to-emerald-400 text-green-900";
+                    if (stat.accuracy >= 95) {
+                        rating = "Xuất sắc";
+                        ratingClass = "from-yellow-300 to-yellow-500 text-yellow-900";
+                    } else if (stat.accuracy >= 80) {
+                        rating = "Rất tốt";
+                        ratingClass = "from-green-300 to-emerald-400 text-green-900";
+                    } else if (stat.accuracy >= 50) {
+                        rating = "Khá";
+                        ratingClass = "from-blue-300 to-blue-500 text-blue-900";
+                    } else {
+                        rating = "Cần cố gắng";
+                        ratingClass = "from-red-300 to-red-500 text-red-900";
+                    }
+                    
+                    const el = document.createElement('tr');
+                    el.className = 'hover:glass-card/10 transition-colors group';
+                    el.innerHTML = `
+                        <td class="p-4 border-b border-white/10">
+                            <p class="font-bold text-lg mb-0.5 group-hover:text-yellow-200 transition-colors">${stat.name}</p>
+                            <p class="text-xs text-teal-100 font-medium">Khóa học</p>
+                        </td>
+                        <td class="p-4 border-b border-white/10 text-center font-bold text-lg">${stat.accuracy}%</td>
+                        <td class="p-4 border-b border-white/10 text-right">
+                            <span class="bg-gradient-to-r ${ratingClass} text-xs font-bold px-3 py-1.5 rounded-lg">${rating}</span>
+                        </td>
+                    `;
+                    container.appendChild(el);
+                });
+            }
 
             function renderAnalyticsMistakes() {
                 const container = document.getElementById('analytics-mistakes-list');
@@ -1667,6 +1703,7 @@
                     if (typeof renderCoursesGrid === 'function') renderCoursesGrid();
                     if (typeof renderScheduleDateSelector === 'function') renderScheduleDateSelector();
                     if (typeof renderAnalyticsMistakes === 'function') renderAnalyticsMistakes();
+                    if (typeof renderAnalyticsStrengths === 'function') renderAnalyticsStrengths();
                     
                     const actionBtn = document.getElementById('quiz-action-btn');
                     if (actionBtn && !actionBtn.disabled) {
@@ -2124,6 +2161,7 @@
                 
                 renderDashboardStats();
                 if (typeof renderAnalyticsMistakes === 'function') renderAnalyticsMistakes();
+                    if (typeof renderAnalyticsStrengths === 'function') renderAnalyticsStrengths();
                 
                 const timeText = document.getElementById('stat-time-text');
                 if (timeText) {
