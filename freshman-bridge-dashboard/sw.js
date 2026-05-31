@@ -1,4 +1,4 @@
-const CACHE_NAME = 'freshman-analytics-v1';
+const CACHE_NAME = 'freshman-analytics-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
