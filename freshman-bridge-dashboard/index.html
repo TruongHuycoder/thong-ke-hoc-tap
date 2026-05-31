@@ -64,8 +64,8 @@
         
         <!-- 1. Sidebar Navigation -->
         <!-- Mobile overlay -->
-        <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
-        <aside id="main-sidebar" class="w-64 glass-card border-r border-mint flex flex-col p-6 shrink-0 h-full z-50 fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out hidden md:flex">
+        <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-40 hidden" onclick="toggleSidebar()"></div>
+        <aside id="main-sidebar" class="w-64 glass-card border-r border-mint flex flex-col p-6 shrink-0 h-full z-50 fixed inset-y-0 left-0 transform -translate-x-full transition-transform duration-300 ease-in-out flex">
             <!-- Logo area -->
             <div class="flex items-center gap-3 mb-10">
                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-teal-400 "></div>
@@ -100,7 +100,7 @@
             <!-- 2. Top Header -->
             <header id="main-header" class="flex justify-between items-center mb-8 hidden">
                 <div class="flex items-center gap-4">
-                    <button id="mobile-menu-btn" onclick="toggleSidebar()" class="md:hidden text-mint text-2xl focus:outline-none h-10 w-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors">
+                    <button id="mobile-menu-btn" onclick="toggleSidebar()" class="text-mint text-2xl focus:outline-none h-10 w-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors">
                         <i class="fas fa-bars"></i>
                     </button>
                     <div>
@@ -205,12 +205,12 @@
                                 <div class="relative w-16 h-16 shrink-0">
                                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                         <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(45,212,191,0.15)" stroke-width="10" />
-                                        <circle id="stat-completion-circle" cx="50" cy="50" r="40" fill="none" stroke="#2dd4bf" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="62.8" stroke-linecap="round" class="transition-all duration-1000" />
+                                        <circle id="stat-completion-circle" cx="50" cy="50" r="40" fill="none" stroke="#2dd4bf" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" class="transition-all duration-1000" />
                                     </svg>
-                                    <div id="stat-completion-text" class="absolute inset-0 flex items-center justify-center font-bold text-sm text-white">75%</div>
+                                    <div id="stat-completion-text" class="absolute inset-0 flex items-center justify-center font-bold text-sm text-white">0%</div>
                                 </div>
                                 <div>
-                                    <div class="text-2xl font-bold text-white leading-none mb-1" id="stat-completion-label">75%</div>
+                                    <div class="text-2xl font-bold text-white leading-none mb-1" id="stat-completion-label">0%</div>
                                     <div class="text-xs text-teal-400">↑ on track</div>
                                 </div>
                             </div>
@@ -229,9 +229,9 @@
                                 <div class="relative w-16 h-16 shrink-0">
                                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                         <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(96,165,250,0.15)" stroke-width="10" />
-                                        <circle id="stat-ontime-circle" cx="50" cy="50" r="40" fill="none" stroke="#60a5fa" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="25.12" stroke-linecap="round" class="transition-all duration-1000" />
+                                        <circle id="stat-ontime-circle" cx="50" cy="50" r="40" fill="none" stroke="#60a5fa" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" class="transition-all duration-1000" />
                                     </svg>
-                                    <div id="stat-ontime-text" class="absolute inset-0 flex items-center justify-center font-bold text-sm text-white">90%</div>
+                                    <div id="stat-ontime-text" class="absolute inset-0 flex items-center justify-center font-bold text-sm text-white">0%</div>
                                 </div>
                                 <div>
                                     <div class="text-2xl font-bold text-white leading-none mb-1">90%</div>
@@ -248,7 +248,7 @@
                             </div>
                             <div class="relative">
                                 <div class="text-xs text-gray-400 font-medium uppercase tracking-wider mb-1" data-i18n="avg_time">Avg. Time</div>
-                                <div id="stat-time-text" class="font-bold text-3xl text-white leading-none">1.5 hrs</div>
+                                <div id="stat-time-text" class="font-bold text-3xl text-white leading-none">0 hrs</div>
                                 <div class="text-xs text-violet-400 mt-1">per session</div>
                             </div>
                         </div>
@@ -782,7 +782,7 @@
                 const ontimeText = document.getElementById('stat-ontime-text');
                 if (ontimeCircle && ontimeText) {
                     let scoreRatio = (dashboardState.totalQuestions > 0) ? (dashboardState.totalScore / dashboardState.totalQuestions) : 0;
-                    let newPercent = dashboardState.completedQuizzes > 0 ? Math.floor(70 + (scoreRatio * 30)) : 90;
+                    let newPercent = dashboardState.completedQuizzes > 0 ? Math.floor(scoreRatio * 100) : 0;
                     let newOffset = 251.2 - ((251.2 * newPercent) / 100);
                     ontimeCircle.style.strokeDashoffset = newOffset;
                     ontimeText.textContent = `${newPercent}%`;
