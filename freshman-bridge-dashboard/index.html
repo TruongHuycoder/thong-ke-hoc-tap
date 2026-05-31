@@ -234,8 +234,8 @@
                                     <div id="stat-ontime-text" class="absolute inset-0 flex items-center justify-center font-bold text-sm text-white">0%</div>
                                 </div>
                                 <div>
-                                    <div class="text-2xl font-bold text-white leading-none mb-1">90%</div>
-                                    <div class="text-xs text-blue-400">↑ excellent</div>
+                                    <div class="text-2xl font-bold text-white leading-none mb-1" id="stat-ontime-label">0%</div>
+                                    <div class="text-xs text-blue-400" id="stat-ontime-trend">— no data yet</div>
                                 </div>
                             </div>
                         </div>
@@ -282,65 +282,43 @@
                         </div>
                     </div>
 
-                    <!-- Row 3: Learning Path — cleaner design -->
+                    <!-- Row 3: Quick Start shortcuts -->
                     <div class="glass-card rounded-2xl border border-mint overflow-hidden mb-8">
-                        <div class="flex items-center justify-between px-6 py-4 border-b border-mint/30">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-teal-400/20 flex items-center justify-center">
-                                    <i class="fas fa-route text-teal-400 text-sm"></i>
-                                </div>
-                                <h2 class="text-base font-bold text-white">Optimal Learning Path</h2>
+                        <div class="flex items-center gap-3 px-6 py-4 border-b border-mint/30">
+                            <div class="w-8 h-8 rounded-lg bg-teal-400/20 flex items-center justify-center">
+                                <i class="fas fa-rocket text-teal-400 text-sm"></i>
                             </div>
-                            <div class="flex gap-4 text-xs">
-                                <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-yellow-400"></div><span class="text-gray-400">Stress</span></div>
-                                <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-teal-400"></div><span class="text-gray-400">Optimal</span></div>
-                                <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-gray-400"></div><span class="text-gray-400">Boredom</span></div>
-                            </div>
+                            <h2 class="text-base font-bold text-white">Quick Start</h2>
                         </div>
-                        <div class="w-full h-[200px] text-teal-400 px-2">
-                            <svg viewBox="0 0 800 200" class="w-full h-full" preserveAspectRatio="none">
-                                <defs>
-                                    <linearGradient id="optGrad" x1="0" y1="0" x2="1" y2="1">
-                                        <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.3">
-                                            <animate attributeName="stop-opacity" values="0.3;0.5;0.3" dur="3s" repeatCount="indefinite"/>
-                                        </stop>
-                                        <stop offset="100%" stop-color="#0d9488" stop-opacity="0.05">
-                                            <animate attributeName="stop-opacity" values="0.05;0.15;0.05" dur="3s" repeatCount="indefinite"/>
-                                        </stop>
-                                    </linearGradient>
-                                    <linearGradient id="lineGlow" x1="0" y1="0" x2="1" y2="0">
-                                        <stop offset="0%" stop-color="#5eead4"/>
-                                        <stop offset="50%" stop-color="#14b8a6"/>
-                                        <stop offset="100%" stop-color="#0d9488"/>
-                                    </linearGradient>
-                                    <filter id="glow">
-                                        <feGaussianBlur stdDeviation="3" result="blur"/>
-                                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                                    </filter>
-                                </defs>
-                                <text x="10" y="18" class="text-xs fill-gray-500 font-medium" font-size="11">Difficulty ↑</text>
-                                <text x="700" y="192" class="text-xs fill-gray-500 font-medium" font-size="11">Skill →</text>
-                                <path d="M0,200 L0,160 Q400,100 800,20 L800,200 Z" fill="url(#optGrad)">
-                                    <animate attributeName="d" values="M0,200 L0,160 Q400,100 800,20 L800,200 Z;M0,200 L0,155 Q400,95 800,15 L800,200 Z;M0,200 L0,165 Q400,105 800,25 L800,200 Z;M0,200 L0,160 Q400,100 800,20 L800,200 Z" dur="4s" repeatCount="indefinite"/>
-                                </path>
-                                <path d="M0,160 Q400,100 800,20" fill="none" stroke="url(#lineGlow)" stroke-width="2.5" stroke-linecap="round" filter="url(#glow)">
-                                    <animate attributeName="d" values="M0,160 Q400,100 800,20;M0,155 Q400,95 800,15;M0,165 Q400,105 800,25;M0,160 Q400,100 800,20" dur="4s" repeatCount="indefinite"/>
-                                </path>
-                                <path d="M0,200 Q400,140 800,60" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 5" stroke-opacity="0.4">
-                                    <animate attributeName="stroke-dashoffset" values="0;20" dur="2s" repeatCount="indefinite"/>
-                                </path>
-                                <circle r="5" fill="#5eead4" filter="url(#glow)">
-                                    <animateMotion dur="5s" repeatCount="indefinite" path="M0,160 Q400,100 800,20"/>
-                                </circle>
-                                <circle r="9" fill="#5eead4" opacity="0.25">
-                                    <animateMotion dur="5s" repeatCount="indefinite" path="M0,160 Q400,100 800,20"/>
-                                    <animate attributeName="r" values="9;15;9" dur="1.5s" repeatCount="indefinite"/>
-                                </circle>
-                                <text x="400" y="125" text-anchor="middle" font-size="11" font-weight="bold" letter-spacing="3" fill="#5eead4" transform="rotate(-8, 400, 125)" filter="url(#glow)">
-                                    OPTIMAL ZONE
-                                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
-                                </text>
-                            </svg>
+                        <div class="grid grid-cols-2 md:grid-cols-4">
+                            <button onclick="document.querySelector('[data-target=\'courses-view\']').click()" class="flex flex-col items-center justify-center gap-2 py-7 hover:bg-white/5 transition-colors group border-r border-b border-mint/10">
+                                <div class="w-12 h-12 rounded-2xl bg-teal-400/10 group-hover:bg-teal-400/20 flex items-center justify-center transition-colors">
+                                    <i class="fas fa-book-open text-teal-400 text-xl"></i>
+                                </div>
+                                <span class="text-sm font-semibold text-white">My Courses</span>
+                                <span class="text-xs text-gray-500">Browse &amp; practice</span>
+                            </button>
+                            <button onclick="document.getElementById('add-material-btn').click()" class="flex flex-col items-center justify-center gap-2 py-7 hover:bg-white/5 transition-colors group border-r border-b border-mint/10">
+                                <div class="w-12 h-12 rounded-2xl bg-blue-400/10 group-hover:bg-blue-400/20 flex items-center justify-center transition-colors">
+                                    <i class="fas fa-cloud-upload-alt text-blue-400 text-xl"></i>
+                                </div>
+                                <span class="text-sm font-semibold text-white">Upload</span>
+                                <span class="text-xs text-gray-500">Add new material</span>
+                            </button>
+                            <button onclick="document.querySelector('[data-target=\'analytics-view\']').click()" class="flex flex-col items-center justify-center gap-2 py-7 hover:bg-white/5 transition-colors group border-r border-b border-mint/10">
+                                <div class="w-12 h-12 rounded-2xl bg-violet-400/10 group-hover:bg-violet-400/20 flex items-center justify-center transition-colors">
+                                    <i class="fas fa-chart-bar text-violet-400 text-xl"></i>
+                                </div>
+                                <span class="text-sm font-semibold text-white">Analytics</span>
+                                <span class="text-xs text-gray-500">View progress</span>
+                            </button>
+                            <button onclick="document.querySelector('[data-target=\'schedule-view\']').click()" class="flex flex-col items-center justify-center gap-2 py-7 hover:bg-white/5 transition-colors group border-b border-mint/10">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-400/10 group-hover:bg-amber-400/20 flex items-center justify-center transition-colors">
+                                    <i class="fas fa-calendar-alt text-amber-400 text-xl"></i>
+                                </div>
+                                <span class="text-sm font-semibold text-white">Schedule</span>
+                                <span class="text-xs text-gray-500">Plan your week</span>
+                            </button>
                         </div>
                     </div>
 
@@ -765,33 +743,38 @@
             function renderDashboardStats() {
                 if (!dashboardState) return;
 
-                // 1. Completion Rate
+                // 1. Completion Rate — starts at 0, grows with quiz completions
                 const completionCircle = document.getElementById('stat-completion-circle');
                 const completionText = document.getElementById('stat-completion-text');
+                const completionLabel = document.getElementById('stat-completion-label');
                 if (completionCircle && completionText) {
-                    let baseRate = 50 + ((dashboardState.completedQuizzes || 0) * 10);
-                    let newPercent = Math.min(100, baseRate);
-                    
+                    let newPercent = Math.min(100, (dashboardState.completedQuizzes || 0) * 10);
                     let newOffset = 251.2 - ((251.2 * newPercent) / 100);
                     completionCircle.style.strokeDashoffset = newOffset;
                     completionText.textContent = `${newPercent}%`;
+                    if (completionLabel) completionLabel.textContent = `${newPercent}%`;
                 }
 
-                // 2. On-Time Rate
+                // 2. On-Time Rate — starts at 0, based on actual quiz score ratio
                 const ontimeCircle = document.getElementById('stat-ontime-circle');
                 const ontimeText = document.getElementById('stat-ontime-text');
+                const ontimeLabel = document.getElementById('stat-ontime-label');
+                const ontimeTrend = document.getElementById('stat-ontime-trend');
                 if (ontimeCircle && ontimeText) {
                     let scoreRatio = (dashboardState.totalQuestions > 0) ? (dashboardState.totalScore / dashboardState.totalQuestions) : 0;
                     let newPercent = dashboardState.completedQuizzes > 0 ? Math.floor(scoreRatio * 100) : 0;
                     let newOffset = 251.2 - ((251.2 * newPercent) / 100);
                     ontimeCircle.style.strokeDashoffset = newOffset;
                     ontimeText.textContent = `${newPercent}%`;
+                    if (ontimeLabel) ontimeLabel.textContent = `${newPercent}%`;
+                    if (ontimeTrend) ontimeTrend.textContent = newPercent > 0 ? (newPercent >= 80 ? '↑ excellent' : '↑ improving') : '— no data yet';
                 }
 
-                // 3. Avg. Completion Time
+                // 3. Avg. Completion Time — 0 if no quizzes done
                 const timeText = document.getElementById('stat-time-text');
                 if (timeText) {
-                    let newTime = Math.max(0.5, 1.5 - ((dashboardState.completedQuizzes || 0) * 0.1)).toFixed(1);
+                    let done = dashboardState.completedQuizzes || 0;
+                    let newTime = done > 0 ? Math.max(0.5, 1.5 - (done * 0.1)).toFixed(1) : '0';
                     timeText.textContent = `${newTime} hrs`;
                 }
             }
