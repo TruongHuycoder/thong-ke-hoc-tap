@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/sashabaranov/go-openai"
@@ -150,16 +151,62 @@ func handleGenerateQuiz(w http.ResponseWriter, r *http.Request) {
 		text = text[:3000]
 	}
 
-	prompt := fmt.Sprintf(`Tạo %d câu hỏi từ văn bản sau. Phân bổ đều: trắc nghiệm (mcq), đúng sai (tf), điền khuyết (fitb).
+	// Smart Math Detection: count math symbols in text
+	mathSymbols := []string{"∫", "∑", "∂", "√", "π", "α", "β", "γ", "θ", "λ", "μ", "σ", "φ", "Δ", "≤", "≥", "≠", "≈", "∞", "²", "³", "⁴", "dx", "dy", "lim", "sin", "cos", "tan", "log", "ln"}
+	mathScore := 0
+	for _, sym := range mathSymbols {
+		if strings.Contains(text, sym) {
+			mathScore++
+		}
+	}
+	// Also count = signs and numbers ratio
+	for _, ch := range text {
+		if ch == '=' || ch == '+' || ch == '-' || ch == '/' || ch == '%' {
+			mathScore++
+		}
+	}
 
-Trả về JSON object có key "questions" chứa mảng câu hỏi. Mỗi câu hỏi theo format:
-- MCQ: {"type":"mcq","q":"...","options":["A","B","C","D"],"answer":0,"explanation":"..."}
-- TF: {"type":"tf","q":"...","options":["True","False"],"answer":0,"explanation":"..."}
-- FITB: {"type":"fitb","q":"... ______","answerText":"từ","explanation":"..."}
+	var prompt string
 
-Quy tắc: Không đục lỗ công thức toán. Không dùng phiên âm. answerText phải 1-3 từ.
+	if mathScore >= 8 {
+		// MATH MODE: Specialized prompt for mathematical content
+		prompt = fmt.Sprintf(`Bạn là chuyên gia tạo câu hỏi kiểm tra TOÁN HỌC. Phân tích văn bản sau và tạo ĐÚNG %d câu hỏi.
+
+QUY TẮC BẮT BUỘC CHO TOÁN:
+1. CHỈ tạo câu MCQ và True/False (TF). KHÔNG tạo FITB vì dễ lỗi với công thức.
+2. Hỏi về KHÁI NIỆM, ĐỊNH NGHĨA, ĐỊNH LÝ, ĐIỀU KIỆN ÁP DỤNG — KHÔNG yêu cầu tính toán.
+3. Ví dụ câu hỏi TỐT: "Điều kiện để tích phân hội tụ là gì?" / "Định lý nào phát biểu rằng..."
+4. Ví dụ câu hỏi XẤU (TRÁNH): "Tính ∫x²dx = ?" (yêu cầu tính toán)
+5. Các lựa chọn đáp án phải là CHỮ (khái niệm/tên định lý), KHÔNG phải kết quả số.
+6. Phân bổ: 70%% MCQ, 30%% TF.
+
+FORMAT JSON bắt buộc:
+{"questions": [
+  {"type":"mcq","q":"câu hỏi về khái niệm?","options":["A. khái niệm","B. khái niệm","C. khái niệm","D. khái niệm"],"answer":0,"explanation":"giải thích ngắn"},
+  {"type":"tf","q":"Mệnh đề: [phát biểu định lý]","options":["True","False"],"answer":0,"explanation":"giải thích"}
+]}
+
+Văn bản toán học: %s`, req.NumQuestions, text)
+	} else {
+		// NORMAL MODE: General prompt for non-math content
+		prompt = fmt.Sprintf(`Bạn là chuyên gia tạo câu hỏi học tập. Tạo ĐÚNG %d câu hỏi từ văn bản sau.
+Phân bổ đều: trắc nghiệm (mcq), đúng sai (tf), điền khuyết (fitb).
+
+QUY TẮC:
+1. Câu hỏi phải dựa SÁT vào nội dung văn bản, không bịa thêm.
+2. answerText của FITB phải là 1-3 từ quan trọng trong văn bản.
+3. FITB: đục lỗ từ/cụm từ quan trọng, KHÔNG đục lỗ số hay ký hiệu.
+4. Explanation giải thích ngắn gọn tại sao đáp án đúng.
+
+FORMAT JSON bắt buộc:
+{"questions": [
+  {"type":"mcq","q":"câu hỏi?","options":["A. ...","B. ...","C. ...","D. ..."],"answer":0,"explanation":"..."},
+  {"type":"tf","q":"Mệnh đề: ...","options":["True","False"],"answer":0,"explanation":"..."},
+  {"type":"fitb","q":"... _______ ...","answerText":"từ khóa","explanation":"..."}
+]}
 
 Văn bản: %s`, req.NumQuestions, text)
+	}
 
 	resp, err := openaiClient.CreateChatCompletion(
 		r.Context(),
